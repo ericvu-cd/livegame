@@ -10,10 +10,9 @@
 <p id="notice" class="notice" role="status" aria-live="polite"></p>
 <div class="manager-layout">
 <section class="panel host-panel manager-controls"><div class="host-heading"><span>🎮</span><div><span class="eyebrow">主持人專用</span><h2>競賽操控</h2></div></div>
-<form id="login-form"><p class="small">登入主持人帳號後，才能操作競賽。</p><label for="host-email">電子郵件</label><input id="host-email" type="email" autocomplete="username" required><label for="host-password">密碼</label><input id="host-password" type="password" autocomplete="current-password" required><button id="login-btn" type="submit" disabled>登入主持人</button></form>
-<div id="host-controls" hidden><p id="host-identity" class="small"></p><label for="duration-minutes">⏱ 下一場競賽時間</label><div class="duration-input"><input id="duration-minutes" type="number" min="0" max="180" step="1" value="5" aria-label="分鐘"><span>分</span><input id="duration-seconds" type="number" min="0" max="59" step="1" value="0" aria-label="秒"><span>秒</span></div><p class="small">10 秒至 180 分鐘；按下開始時套用，進行中無法更改。</p>
+<div id="host-controls"><label for="duration-minutes">⏱ 下一場競賽時間</label><div class="duration-input"><input id="duration-minutes" type="number" min="0" max="180" step="1" value="5" aria-label="分鐘"><span>分</span><input id="duration-seconds" type="number" min="0" max="59" step="1" value="0" aria-label="秒"><span>秒</span></div><p class="small">10 秒至 180 分鐘；按下開始時套用，進行中無法更改。</p>
 <div class="manager-buttons"><button id="start-btn" type="button" disabled>▶ 開始競賽</button><button id="stop-btn" class="danger-button" type="button" disabled>■ 停止本場</button><button id="reset-btn" class="secondary" type="button" disabled>↻ 重置排行榜</button></div>
-<p class="small manager-help">停止：立即結束本場並保留最終排名。<br>重置：清空展示榜，讓玩家回到等待畫面。</p><button id="logout-btn" class="ghost" type="button">登出主持人</button></div>
+<p class="small manager-help">停止：立即結束本場並保留最終排名。<br>重置：清空展示榜，讓玩家回到等待畫面。</p></div>
 </section>
 <aside class="panel manager-links"><span class="eyebrow">三個網址，三種用途</span><h2>安排現場畫面</h2><a id="board-link" class="role-link" href="fishball-race-board.html" target="_blank" rel="noopener"><b>02</b><span><strong>競賽展示端 ↗</strong><small>投影或大螢幕專用：時間、狀態、前十名。</small></span></a><p id="board-url" class="endpoint"></p><button id="copy-board" class="ghost" type="button">複製展示網址</button>
 <a id="play-link" class="role-link" href="fishball-race.html" target="_blank" rel="noopener"><b>03</b><span><strong>玩家遊戲端 ↗</strong><small>手機或平板：輸入名字，玩魚丸追追樂。</small></span></a><p id="play-url" class="endpoint"></p><button id="copy-player" class="ghost" type="button">複製玩家網址</button>

@@ -5,18 +5,9 @@ import { isRunning, startAttempt, scoreUpdate } from './model.mjs';
 const role = location.pathname.endsWith('fishball-race-admin.html') ? 'host' : location.pathname.endsWith('fishball-race-board.html') ? 'display' : 'player';
 // The emulator switch is accepted on loopback only, never on a hosted website.
 const emulator = ['localhost','127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).get('emulator') === '1';
-let authSDK;
 export class FirebaseService {
   static async connect() {
     const service = new FirebaseService();
-    if (role === 'host') {
-      authSDK = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-      service.auth = authSDK.getAuth(service.app);
-      if (emulator) authSDK.connectAuthEmulator(service.auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-      await authSDK.setPersistence(service.auth, authSDK.inMemoryPersistence);
-      await service.auth.authStateReady();
-    }
-    await service.refreshIdentity();
     await service.syncClock();
     return service;
   }
@@ -32,10 +23,10 @@ export class FirebaseService {
     }
     this.controlRef = doc(this.db, paths.control);
     this.clockUncertainty = 250;
-    this.host = false;
+    this.host = role === 'host';
     this.clockAnchor = null;
   }
-  get uid() { return this.auth?.currentUser?.uid; }
+  get uid() { return this.deviceId; }
   now() {
     if (!this.clockAnchor) throw new Error('尚未完成伺服器時間同步。');
     return this.clockAnchor.server + performance.now() - this.clockAnchor.local;
@@ -49,17 +40,6 @@ export class FirebaseService {
     // Anchor to a monotonic clock; changing device wall time cannot extend a round.
     this.clockAnchor = { server: at + (after - before) / 2, local: after };
     this.clockUncertainty = Math.ceil((after - before) / 2) + 50;
-  }
-  async refreshIdentity() {
-    this.email = this.auth?.currentUser?.email || '';
-    this.host = false;
-    if (this.auth?.currentUser && !this.auth.currentUser.isAnonymous) {
-      const [platformAdmin,raceHost] = await Promise.all([
-        getDocFromServer(doc(this.db, 'admins', this.uid)),
-        getDocFromServer(doc(this.db, paths.hosts, this.uid))
-      ]);
-      this.host = platformAdmin.exists() || raceHost.exists();
-    }
   }
   decodeRace(data) {
     const startedAt = data?.startedAt?.toMillis() ?? null;
@@ -84,23 +64,8 @@ export class FirebaseService {
     const snap = await getDocsFromServer(this.topQuery(roundId));
     return snap.docs.map(d => ({ ...d.data(), id: d.id }));
   }
-  async login(email, password) {
-    if (role !== 'host') throw new Error('請在管理端登入主持人。');
-    await authSDK.signInWithEmailAndPassword(this.auth, email, password);
-    await this.refreshIdentity();
-    if (!this.host) {
-      await this.logout();
-      throw new Error('此帳號不在平台 admins 或競賽主持人白名單，請使用現有管理員帳號登入。');
-    }
-    await this.syncClock();
-  }
-  async logout() {
-    if (this.auth) await authSDK.signOut(this.auth);
-    await this.refreshIdentity();
-    await this.syncClock();
-  }
   async startRace(duration) {
-    if (!this.host) throw new Error('請先登入主持人。');
+    if (!this.host) throw new Error('請使用管理操控頁面。');
     await this.syncClock();
     const roundId = crypto.randomUUID();
     await runTransaction(this.db, async tx => {
@@ -112,7 +77,7 @@ export class FirebaseService {
     });
   }
   async stopRace(expectedRoundId) {
-    if (!this.host) throw new Error('請先登入主持人。');
+    if (!this.host) throw new Error('請使用管理操控頁面。');
     await runTransaction(this.db, async tx => {
       const snap = await tx.get(this.controlRef), data = snap.data(), race = this.decodeRace(data);
       if (!race || race.roundId !== expectedRoundId) throw new Error('場次已變更，請確認目前場次後再操作。');
@@ -121,7 +86,7 @@ export class FirebaseService {
     });
   }
   async resetRace(expectedRoundId) {
-    if (!this.host) throw new Error('請先登入主持人。');
+    if (!this.host) throw new Error('請使用管理操控頁面。');
     // Switch the active round instead of deleting an unlimited number of players.
     await runTransaction(this.db, async tx => {
       const snap = await tx.get(this.controlRef);

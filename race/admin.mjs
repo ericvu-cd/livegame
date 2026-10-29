@@ -22,7 +22,6 @@ function tick(){
   $('admin-clock').textContent=hasRound?formatClock(race.endsAt-service.now()):'--:--';
   $('admin-clock').classList.toggle('urgent',live&&race.endsAt-service.now()<30000);
   $('admin-round').textContent=hasRound?'#'+race.roundId.slice(0,8):'尚未開賽';
-  $('login-btn').disabled=busy||!confirmed||!navigator.onLine;
   $('start-btn').disabled=!authorized||live;
   $('start-btn').textContent=hasRound?'▶ 開始新一場':'▶ 開始競賽';
   $('stop-btn').disabled=!authorized||!live;
@@ -30,19 +29,11 @@ function tick(){
   $('duration-minutes').disabled=busy||live||!service.host;
   $('duration-seconds').disabled=busy||live||!service.host;
 }
-function hostUI(){
-  $('login-form').hidden=!!service?.host;$('host-controls').hidden=!service?.host;
-  $('host-identity').textContent=service?.host?service.email:'';
-  tick();
-}
+function hostUI(){tick();}
 async function act(work,success){
   if(busy||!service)return;busy=true;tick();
   try{await work();notice(success||'');}catch(error){notice(friendlyError(error),true);}finally{busy=false;hostUI();}
 }
-$('login-form').addEventListener('submit',e=>{
-  e.preventDefault();void act(async()=>{await service.login($('host-email').value.trim(),$('host-password').value);$('host-password').value='';},'主持人登入成功，可以操作競賽。');
-});
-$('logout-btn').addEventListener('click',()=>void act(()=>service.logout(),'已登出；目前競賽會繼續依設定時間運行。'));
 $('start-btn').addEventListener('click',()=>{
   void act(async()=>{
     const minutes=$('duration-minutes').value,seconds=$('duration-seconds').value;

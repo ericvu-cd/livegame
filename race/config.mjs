@@ -8,5 +8,5 @@ export const firebaseConfig = {
   messagingSenderId: '544673054706',
   appId: '1:544673054706:web:2500b09a6b4298d981f56b'
 };
-export const paths = { control: 'fishballRaceControl/current', rounds: 'fishballRaceRounds', clocks: 'fishballRaceClocks', hosts: 'fishballRaceHosts' };
+export const paths = { control: 'fishballRaceControl/current', rounds: 'fishballRaceRounds', clocks: 'fishballRaceClocks' };
 
