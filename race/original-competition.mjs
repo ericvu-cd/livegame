@@ -16,6 +16,7 @@ shell.innerHTML=`<style>
 document.body.append(shell);
 const $=id=>document.getElementById(id),storage=demo?sessionStorage:localStorage,key='fishball-race-v2-identity';
 let service,race,identity,record,round,authorized=false,busy=false,sending=false,pending,lastSent='',replaying=false,networkFailed=false;
+let reportedLevels=new Set();
 try{identity=JSON.parse(storage.getItem(key)||'null');$('player-name').value=identity?.name||'';}catch{}
 const active=()=>!!service&&isRunning(race,service.now())&&navigator.onLine;
 window.fishballRaceAllowed=()=>authorized&&active()&&!networkFailed;
@@ -31,7 +32,7 @@ function stop(text){
 }
 function openJoin(){
  if(!active()){message('等待競賽',race?.status==='stopped'?'主持人已停止本場。':'請等待主持人開始新一場競賽。');return;}
- message('加入魚丸競賽','同一名字重玩會保留本場最高分。',true);
+ message('加入魚丸競賽','每關完成才同步累計分數；失敗或截止保留已完成關卡成績。重玩保留最高分。',true);
 }
 for(const id of ['startBtn','playAgainBtn'])$(id).addEventListener('click',e=>{
  if(replaying)return;
@@ -47,13 +48,15 @@ $('join-form').onsubmit=async e=>{
   if(!identity||identity.name!==name){identity={id:crypto.randomUUID(),name};storage.setItem(key,JSON.stringify(identity));}
   const saved=await service.startPlayer(nextRound,identity.id,name);
   if(race.roundId!==nextRound||!active())throw Error('本場已截止。');
-  record=saved;round=nextRound;authorized=true;networkFailed=false;lastSent='';
+  record=saved;round=nextRound;authorized=true;networkFailed=false;lastSent='';reportedLevels=new Set();
   $('race-player').textContent=' · '+name+' #'+identity.id.slice(0,4);$('race-dialog').hidden=true;
   replaying=true;$('startBtn').click();replaying=false;
  }catch(error){$('race-notice').textContent=friendlyError(error);}finally{busy=false;$('join-btn').disabled=!active();}
 };
-window.fishballRaceReport=payload=>{
+window.fishballRaceLevelComplete=payload=>{
  if(!authorized||!record||!active()||record.phase==='finished')return;
+ if(reportedLevels.has(payload.level))return;
+ reportedLevels.add(payload.level);
  const signature=JSON.stringify(payload);if(signature===lastSent)return;lastSent=signature;
  pending={...payload,round,id:identity.id,attempt:record.attempt};void pump();
 };
@@ -78,7 +81,7 @@ retry.onclick=async()=>{
  if(networkFailed||pending||sending)return;
  retry.hidden=true;$('race-dialog').hidden=true;
  // Preserve the exact original pause/resume control and current level state.
- window.resumeFromPause();
+ if($('endOverlay').classList.contains('hidden'))window.resumeFromPause();
 };
 function tick(){
  if(!service)return;

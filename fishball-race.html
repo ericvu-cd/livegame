@@ -2439,7 +2439,6 @@
   }
 
   function updateHUD(){
-    window.fishballRaceReport?.({score:totalScore + score,level:currentLevel,finished:false});
     scoreN.textContent = score;
     ballN.textContent = ballEaten;
     susN.textContent = Math.max(0, sustain);
@@ -2695,9 +2694,8 @@
   // 整輪結束（全破或失敗）時，把總分跟徽章上傳給平台，並回傳要注入結算畫面的提示 HTML。
   // 徽章「魚丸守護神」的發放門檻：isFinalClear（10關全破）且累計總分 ≥ 1000，跟原本的本地判斷門檻一致。
   function reportResultToPlatform(totalScore, isFinalClear){
-    window.fishballRaceReport?.({score:totalScore,level:currentLevel,finished:true});
     if(isFinalClear && totalScore >= 1000) showBadge();
-    return '<div class="platform-notice">本局成績已送出，個人最高分請看競賽看板。</div>';
+    return '<div class="platform-notice">只計入已完成關卡的累計分數，個人最高分請看競賽看板。</div>';
 
     const earnsBadge = isFinalClear && totalScore >= 1000;
     const alreadyHasBadge = platformBadges.includes(BADGE_ID);
@@ -2775,7 +2773,7 @@
     SFX.ambientStop();
     totalScore += score;
 
-    window.fishballRaceReport?.({score:totalScore,level:currentLevel,finished:currentLevel >= LEVELS.length});
+    window.fishballRaceLevelComplete?.({score:totalScore,level:currentLevel,finished:currentLevel >= LEVELS.length});
     const isFinal = currentLevel >= LEVELS.length;
     SFX.win(); vibrate([30,50,30,50,90]);
     endEmojiImg.src = ICONS.trophy;

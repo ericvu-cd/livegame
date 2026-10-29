@@ -37,7 +37,7 @@ function render(players){
     const state=document.createElement('td');state.className='rank-state';
     const closed=!isRunning(race,service.now());
     const badge=document.createElement('span');badge.className='player-phase '+(closed||player.phase==='finished'?'phase-finished':'phase-playing');
-    badge.textContent=closed?(player.phase==='finished'?'已完成':'截止計分'):player.phase==='finished'?'本局完成':'挑戰中 · 第 '+(player.level||1)+' 關';state.append(badge);
+    badge.textContent=closed?(player.phase==='finished'?'已完成':'截止計分'):player.phase==='finished'?'本局完成':'最近同步 · 第 '+(player.level||1)+' 關';state.append(badge);
     row.append(rank,name,state,score);$('rankings').append(row);
   });
   previousPlayers=new Map(players.map((p,index)=>[p.id,{index,score:p.bestScore}]));
