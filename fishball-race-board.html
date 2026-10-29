@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#2477d4"><title>魚丸追追樂｜現場競賽看板</title><link rel="icon" href="race/assets/fbicon.png"><link rel="stylesheet" href="race/race.css"></head>
+<body class="board-page display-only state-ready">
+<div class="sky-decor" aria-hidden="true"><span class="pixel-cloud cloud-one"></span><span class="pixel-cloud cloud-two"></span><span class="sky-coin">★</span></div>
+<header class="site-header"><a class="brand" href="fishball-race-board.html"><img src="race/assets/fbicon.png" alt="">魚丸追追樂 <span>現場競賽看板</span></a><div class="header-actions"><span id="connection" class="connection" role="status">連線中…</span><button id="sound-btn" class="ghost" type="button" aria-pressed="true">🔊 聲音開</button><button id="fullscreen-btn" class="ghost" type="button">全螢幕</button></div></header>
+<main class="board-shell">
+<section class="board-intro"><div class="title-lockup"><span class="eyebrow"><b class="live-dot"></b> 苑港海洋爭霸賽 · 挑戰最高紀錄</span><h1>魚丸<em>追追樂</em><span class="title-star">★</span></h1><p id="race-status">正在取得競賽資訊</p><img class="title-chain" src="race/assets/fishball-chain.svg" alt="" aria-hidden="true"></div><div class="big-clock"><span class="timer-label">⏱ 本場剩餘時間</span><strong id="clock">05:00</strong><div class="timer-track"><i id="timer-fill"></i></div><span id="freeze-label">等待主持人開始</span></div></section>
+<p id="notice" class="notice" role="status" aria-live="polite"></p>
+<section class="board-layout"><div class="panel ranking-panel"><div class="panel-heading"><h2>🏆 英雄排行榜 <small>TOP 10</small></h2><span id="live-badge">挑戰者募集中</span></div>
+<div id="champion-banner" class="champion-banner is-empty"><span class="champion-crown" aria-hidden="true">👑</span><div><span id="champion-label" class="eyebrow">下一位魚丸王</span><strong id="champion-name">就是你！準備好挑戰了嗎？</strong><span id="champion-id"></span></div><div class="champion-points"><strong id="champion-score">READY!</strong><span id="champion-unit">最高榮耀，等你來拿</span></div></div>
+<table><thead><tr><th scope="col">名次</th><th scope="col">挑戰者</th><th scope="col" class="rank-state">遊戲狀態</th><th scope="col" class="align-right">最高分數</th></tr></thead><tbody id="rankings"></tbody></table>
+<div id="empty-state" class="empty-state"><div class="empty-hero"><img src="race/assets/fbbg.png" alt="魚丸追追樂：勇闖海洋冒險"></div><strong>挑戰者，集合！</strong><p>輸入名字，讓全場看見你的實力。</p><div class="ready-blocks" aria-hidden="true"><span>3</span><span>2</span><span>1</span><b>GO!</b></div><span class="empty-hint">主持人按下開始，就能加入爭奪魚丸王！</span></div>
+<div class="ranking-foot"><span>★ 吃好魚 · 衝高分 · 守護海洋 ★</span><small>同分依玩家識別碼排序 · 截止後固定成績</small><a id="play-link" href="fishball-race.html">玩家入口 ↗</a></div></div>
+</section></main>
+<div id="hype-banner" class="hype-banner" aria-hidden="true"><strong></strong><span></span></div><div id="celebration" class="celebration" aria-hidden="true"></div><div class="brick-ground" aria-hidden="true"></div>
+<script type="module" src="race/board.mjs"></script></body></html>
+

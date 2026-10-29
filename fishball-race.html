@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#2477d4"><title>魚丸追追樂｜限時競賽</title><link rel="icon" href="race/assets/fbicon.png"><link rel="stylesheet" href="race/race.css"></head>
+<body class="game-page">
+<div class="sky-decor" aria-hidden="true"><span class="pixel-cloud cloud-one"></span><span class="pixel-cloud cloud-two"></span></div>
+<header class="site-header"><a class="brand" href="fishball-race.html"><img src="race/assets/fbicon.png" alt="">魚丸追追樂 <span>限時競賽</span></a><div class="header-actions"><span id="connection" class="connection" role="status">連線中…</span><button id="sound-btn" class="ghost" type="button" aria-pressed="true">🔊 聲音開</button></div></header>
+<main class="game-shell">
+<section class="race-strip" aria-label="競賽狀態"><div><span class="eyebrow">現場挑戰</span><strong id="race-status">正在取得競賽資訊</strong></div><div class="race-clock"><span>剩餘時間</span><strong id="clock">--:--</strong></div></section>
+<p id="notice" class="notice" role="status" aria-live="polite"></p>
+<section id="lobby" class="panel lobby">
+<div class="lobby-art"><img src="race/assets/fbbg.png" alt="魚丸追追樂，勇闖海洋冒險！"></div>
+<div class="lobby-content"><span class="eyebrow">海洋冒險，即刻開戰！</span><h1>下一位<em>魚丸王</em>，就是你！</h1><p class="lobby-lead">串起魚丸、閃過潮水，衝上全場排行榜！</p>
+<form id="join-form"><label for="player-name">挑戰者，報上你的名字！</label><div class="input-row"><input id="player-name" name="name" maxlength="20" placeholder="輸入 1–20 個字" autocomplete="nickname" required><button id="join-btn" type="submit" disabled>等待競賽開始</button></div></form><p id="identity" class="small"></p>
+<div class="food-guide"><span>🐟 好魚 +5</span><span>🦈 大魚 +10</span><span>🍥 魚丸 +20</span><span>🐠 幼魚 −5</span><span>🐢 保育類 −20</span><span>🧊 永續 +10</span></div>
+<details class="instructions"><summary>🎮 怎麼玩？查看冒險指南</summary><p class="small">滑動、方向鍵或下方按鈕控制魚丸串。同類連吃有 COMBO 加成。共 10 關，每關撐到倒數結束即可過關。潮水會縮小場地；撞到自己、越界或永續值歸零會結束本局。幼魚與保育類會扣永續值。時間內可重玩，保留最高分。</p></details>
+</div></section>
+<section id="play-area" class="panel play-area" hidden>
+<div class="player-line"><strong id="playing-name"></strong><span id="level-label">第 1 / 10 關</span><span id="level-clock"></span></div>
+<div class="stats"><div><span>🍥 本局累計</span><strong id="score">0</strong></div><div><span>🏆 個人最高</span><strong id="best">0</strong></div><div><span>💚 永續值</span><strong id="sustain">100</strong><i class="sustain-track"><i id="sustain-fill"></i></i></div></div>
+<div class="board-stage"><div class="canvas-wrap"><canvas id="game" width="450" height="630" aria-label="魚丸遊戲區，可使用方向鍵或下方方向按鈕操作"></canvas><div id="combo-badge" class="combo-badge" aria-hidden="true"></div><div id="tide-alert" class="tide-alert" hidden>⚠ 潮水來襲！往中間閃！</div><div id="game-message" class="game-message" hidden><span id="message-kicker" class="eyebrow">海洋冒險 · 魚丸追追樂</span><strong id="message-title"></strong><p id="message-detail"></p><button id="continue-btn" type="button" hidden>下一關</button><button id="replay-btn" type="button" hidden>再玩一次</button><button id="lobby-btn" type="button">返回 / 換玩家</button></div></div>
+</div><div class="dpad" aria-label="方向控制"><button data-dir="up" aria-label="向上">↑</button><div><button data-dir="left" aria-label="向左">←</button><button data-dir="down" aria-label="向下">↓</button><button data-dir="right" aria-label="向右">→</button></div></div>
+<div class="game-legend"><span>🐟 吃好魚</span><span>🍥 連擊加分</span><span>🧊 回復永續</span><span>⚠ 小心潮水</span></div><p class="small play-note">時間內可重玩，保留個人最高分。分數變動即同步。</p></section>
+<footer>苑港海洋挑戰 · <a id="board-link" href="fishball-race-board.html">現場排行榜 ↗</a><span id="demo-label" hidden>本機示範 · 不寫入正式資料庫</span></footer>
+</main><div id="hype-banner" class="hype-banner" aria-hidden="true"><strong></strong><span></span></div><div id="celebration" class="celebration" aria-hidden="true"></div><div class="brick-ground" aria-hidden="true"></div><script type="module" src="race/game.mjs"></script></body></html>
+

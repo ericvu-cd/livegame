@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#2477d4"><title>魚丸追追樂｜競賽管理</title><link rel="icon" href="race/assets/fbicon.png"><link rel="stylesheet" href="race/race.css"></head>
+<body class="admin-page">
+<div class="sky-decor" aria-hidden="true"><span class="pixel-cloud cloud-one"></span><span class="pixel-cloud cloud-two"></span></div>
+<header class="site-header"><a class="brand" href="fishball-race-admin.html"><img src="race/assets/fbicon.png" alt="">魚丸追追樂 <span>競賽管理端</span></a><span id="connection" class="connection" role="status">連線中…</span></header>
+<main class="manager-shell">
+<section class="manager-intro"><div><span class="eyebrow">🎮 主持人的開賽指揮台</span><h1>全場準備，<em>由你開賽！</em></h1><p>設定時間、開始、停止與重置，集中在這裡操控。</p></div><img src="race/assets/fishball-chain.svg" alt="" aria-hidden="true"></section>
+<section class="manager-summary" aria-label="本場狀態"><div><span>目前狀態</span><strong id="admin-status">連線中</strong></div><div><span>本場剩餘時間</span><strong id="admin-clock">--:--</strong></div><div><span>目前場次</span><strong id="admin-round">尚未開賽</strong></div></section>
+<p id="notice" class="notice" role="status" aria-live="polite"></p>
+<div class="manager-layout">
+<section class="panel host-panel manager-controls"><div class="host-heading"><span>🎮</span><div><span class="eyebrow">主持人專用</span><h2>競賽操控</h2></div></div>
+<form id="login-form"><p class="small">登入主持人帳號後，才能操作競賽。</p><label for="host-email">電子郵件</label><input id="host-email" type="email" autocomplete="username" required><label for="host-password">密碼</label><input id="host-password" type="password" autocomplete="current-password" required><button id="login-btn" type="submit" disabled>登入主持人</button></form>
+<div id="host-controls" hidden><p id="host-identity" class="small"></p><label for="duration-minutes">⏱ 下一場競賽時間</label><div class="duration-input"><input id="duration-minutes" type="number" min="0" max="180" step="1" value="5" aria-label="分鐘"><span>分</span><input id="duration-seconds" type="number" min="0" max="59" step="1" value="0" aria-label="秒"><span>秒</span></div><p class="small">10 秒至 180 分鐘；按下開始時套用，進行中無法更改。</p>
+<div class="manager-buttons"><button id="start-btn" type="button" disabled>▶ 開始競賽</button><button id="stop-btn" class="danger-button" type="button" disabled>■ 停止本場</button><button id="reset-btn" class="secondary" type="button" disabled>↻ 重置排行榜</button></div>
+<p class="small manager-help">停止：立即結束本場並保留最終排名。<br>重置：清空展示榜，讓玩家回到等待畫面。</p><button id="logout-btn" class="ghost" type="button">登出主持人</button></div>
+</section>
+<aside class="panel manager-links"><span class="eyebrow">三個網址，三種用途</span><h2>安排現場畫面</h2><a id="board-link" class="role-link" href="fishball-race-board.html" target="_blank" rel="noopener"><b>02</b><span><strong>競賽展示端 ↗</strong><small>投影或大螢幕專用：時間、狀態、前十名。</small></span></a><p id="board-url" class="endpoint"></p><button id="copy-board" class="ghost" type="button">複製展示網址</button>
+<a id="play-link" class="role-link" href="fishball-race.html" target="_blank" rel="noopener"><b>03</b><span><strong>玩家遊戲端 ↗</strong><small>手機或平板：輸入名字，玩魚丸追追樂。</small></span></a><p id="play-url" class="endpoint"></p><button id="copy-player" class="ghost" type="button">複製玩家網址</button>
+<div class="manager-guide"><strong>現場操作順序</strong><ol><li>大螢幕開啟展示端，玩家開啟遊戲端。</li><li>在此設定時間，按下「開始競賽」。</li><li>時間到自動結束，或按「停止本場」提前鎖榜。</li><li>按「重置排行榜」準備下一場。</li></ol></div><p id="demo-label" class="small" hidden>本機示範：三頁請在同一瀏覽器開啟，不會寫入正式資料庫。</p>
+</aside></div></main><div class="brick-ground" aria-hidden="true"></div>
+<script type="module" src="race/admin.mjs"></script></body></html>
+
