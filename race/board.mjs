@@ -1,46 +1,18 @@
 import { createService, demo, friendlyError } from './service.mjs';
 import { isRunning, formatClock } from './model.mjs';
-import { ArcadeAudio, announce, confetti, punch } from './effects.mjs';
+import { ArcadeAudio, announce, confetti } from './effects.mjs';
 import { pageURL } from './navigation.mjs';
+import { RankingView } from './board-ranking.mjs';
 const $=id=>document.getElementById(id),audio=new ArcadeAudio($('sound-btn'));
-let previousPlayers=new Map(),leaderId=null,lastWarningSecond=null,lastLeaderAnnouncement=-Infinity;
+const ranking=new RankingView(audio);
+let leaderId=null,lastWarningSecond=null;
 let service,race=null,unwatchTop=()=>{},frozen=false,finalLoading=false,finalComplete=false,lastFinalTry=-Infinity;
 $('play-link').href=pageURL('fishball-race.html').href;
 function notice(message='',error=false){$('notice').textContent=message;$('notice').classList.toggle('error',error);}
 function connection(ok,text){$('connection').textContent=text;$('connection').classList.toggle('offline',!ok);}
 function render(players){
-  $('rankings').replaceChildren();$('empty-state').hidden=players.length>0;
-  const leader=players[0];
-  $('champion-banner').classList.toggle('is-empty',!leader);
-  $('champion-name').textContent=leader?leader.name:'就是你！準備好挑戰了嗎？';
-  $('champion-id').textContent=leader?'挑戰者 #'+leader.id.slice(0,4):'';
-  $('champion-score').textContent=leader?leader.bestScore.toLocaleString('zh-TW'):'READY!';
-  $('champion-unit').textContent=leader?'個人最高分':'最高榮耀，等你來拿';
-  if(leader&&leaderId&&leader.id!==leaderId&&isRunning(race,service.now())){
-    punch($('champion-banner'),'leader-changed');
-    if(performance.now()-lastLeaderAnnouncement>6000){announce('冠軍換人！',leader.name+' 搶下領先寶座');audio.cue('go');lastLeaderAnnouncement=performance.now();}
-  }
-  leaderId=leader?.id??null;
-  players.slice(0,10).forEach((player,index)=>{
-    const previous=previousPlayers.get(player.id);
-    const row=document.createElement('tr');row.dataset.rank=index+1;if(index===0)row.className='rank-first';
-    const rank=document.createElement('td');rank.className='rank-number';
-    const rankBadge=document.createElement('span');rankBadge.textContent=String(index+1).padStart(2,'0');rank.append(rankBadge);
-    const name=document.createElement('td');name.className='rank-name';name.append(document.createTextNode(player.name));
-    const id=document.createElement('small');id.textContent='#'+player.id.slice(0,4);name.append(id);name.title=player.name+' #'+player.id;
-    const score=document.createElement('td');score.className='rank-score align-right';score.textContent=player.bestScore.toLocaleString('zh-TW');
-    if(previous&&previous.index>index){
-      row.classList.add('rank-improved');
-      const gain=document.createElement('span');gain.className='position-gain';gain.textContent='↑'+(previous.index-index);name.append(gain);
-    }
-    if(previous&&player.bestScore>previous.score)score.classList.add('score-up');
-    const state=document.createElement('td');state.className='rank-state';
-    const closed=!isRunning(race,service.now());
-    const badge=document.createElement('span');badge.className='player-phase '+(closed||player.phase==='finished'?'phase-finished':'phase-playing');
-    badge.textContent=closed?(player.phase==='finished'?'已完成':'截止計分'):player.phase==='finished'?'本局完成':'最近同步 · 第 '+(player.level||1)+' 關';state.append(badge);
-    row.append(rank,name,state,score);$('rankings').append(row);
-  });
-  previousPlayers=new Map(players.map((p,index)=>[p.id,{index,score:p.bestScore}]));
+  ranking.render(players,{running:!!service&&isRunning(race,service.now())});
+  leaderId=players[0]?.id??null;
 }
 function tick(){
   if(!service)return;
@@ -55,7 +27,7 @@ function tick(){
   if(running&&warningSecond<=10&&warningSecond!==lastWarningSecond){audio.cue('tick');lastWarningSecond=warningSecond;}
   $('clock').classList.toggle('urgent',running&&remaining<=30000);
   $('race-status').textContent=running?'魚丸追追樂 · 現在加入，挑戰前十名':race?.status==='stopped'?'主持人已停止本場競賽':hasRound?'本場競賽已結束':'不限設備 · 等待管理端開始競賽';
-  $('freeze-label').textContent=running?'成績即時更新':hasRound?finalComplete?'已鎖定最終排名':'本場已截止 · 正在確認最終排名':'等待主持人開始';
+  $('freeze-label').textContent=running?'過關更新排名':hasRound?finalComplete?'已鎖定最終排名':'本場已截止 · 正在確認最終排名':'等待主持人開始';
   if(hasRound&&!running&&!finalComplete&&!finalLoading&&navigator.onLine&&(!frozen||performance.now()-lastFinalTry>5000))void finalize(race.roundId);
 }
 async function finalize(roundId){
@@ -87,7 +59,7 @@ try{
   service.watchRace((next,meta={})=>{
     const changed=race?.roundId!==next?.roundId;race=next;
     if(changed){
-      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;previousPlayers.clear();leaderId=null;lastWarningSecond=null;render([]);notice();
+      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;ranking.reset();leaderId=null;lastWarningSecond=null;render([]);notice();
       $('hype-banner').classList.remove('hype-show');$('celebration').replaceChildren();
       if(next?.roundId&&isRunning(next,service.now())){
         if(service.now()-next.startedAt<3000){announce('GO！全場開戰','吃好魚、衝高分，挑戰魚丸王！');audio.cue('go');}

@@ -1,0 +1,84 @@
+/* Public display: ranking first. All overrides stay on the board page. */
+.board-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.board-page{background:radial-gradient(ellipse at 50% -20%,#174b72 0,#071c34 60%,#061427 100%);color:#f4f6ff}
+.board-page .sky-decor,.board-page .title-chain,.board-page .title-star{display:none}
+.board-page .site-header{min-height:54px;padding:8px 3vw;background:#071427;border-bottom:1px solid #4e6b85;box-shadow:none}
+.board-page .brand{font-size:17px}.board-page .brand img{width:28px;height:28px}
+.board-page .board-shell{max-width:1800px;padding:18px 3vw 30px}
+.board-page .board-intro{margin-bottom:14px;gap:20px;align-items:center}
+.board-page .title-lockup{padding:0}.board-page .title-lockup>.eyebrow{background:none;border:0;box-shadow:none;padding:0;color:#76d9ff;letter-spacing:.16em;font-size:12px;margin:0 0 4px}
+.board-page .title-lockup h1{font-size:clamp(30px,3.1vw,52px);margin:0;line-height:1.2;letter-spacing:.02em;-webkit-text-stroke:0;text-shadow:none}
+.board-page .title-lockup>p{font-size:12px;margin-top:8px;color:#9db9d0;text-shadow:none}
+.board-page .big-clock{min-width:300px;padding:8px 20px;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:24px;background:#0a223a;border:1px solid #45617c;box-shadow:none;border-radius:10px}
+.board-page .big-clock:before,.board-page .big-clock:after{display:none}
+.board-page .big-clock strong{grid-column:2;grid-row:1/3;font-family:'Space Grotesk',monospace;font-size:54px;letter-spacing:-.04em;line-height:1.1;color:#ffe78a;text-shadow:none}
+.board-page .big-clock>span{text-align:left;font-size:11px}.board-page .timer-track{grid-row:3;grid-column:1/-1;margin:8px 0 0;height:4px;border:0}.board-page #freeze-label{grid-column:1;grid-row:2;color:#6be4c1}
+.board-page .ranking-panel{border:1px solid #3b5874;background:#0b223c;border-radius:12px;box-shadow:0 20px 80px #0005}
+.board-page .panel-heading{padding:10px 22px;background:#102d49;border-bottom:1px solid #34526d}.board-page .panel-heading h2{font-size:15px;text-shadow:none}.board-page .panel-heading>span{border:0;color:#71efc5;font-size:11px}
+.podium{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:12px;padding:16px 20px 12px;align-items:stretch}
+.podium-card{min-width:0;position:relative;border:1px solid #57718b;border-top:4px solid #bcd2e8;border-radius:8px;padding:16px 20px;background:linear-gradient(115deg,#233b53,#0e2942);display:flex;flex-direction:column;justify-content:center;gap:5px;overflow:hidden}
+.podium-rank{font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.12em;color:#c2d6e8}.podium-rank b{font-size:22px;letter-spacing:0;margin-right:7px}
+.podium-name{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:clamp(20px,2vw,32px);line-height:1.3;font-weight:900;color:#fff}
+.podium-id{font:11px 'Space Grotesk',sans-serif;color:#adc5da}
+.podium-score{font:700 clamp(30px,3vw,48px)/1.2 'Space Grotesk',monospace;letter-spacing:-.03em;color:#e6f3ff;font-variant-numeric:tabular-nums}.podium-score small{font:11px system-ui;margin-left:8px;color:#a2bdd4}
+.podium-card.podium-bronze{border-color:#80604d;border-top-color:#e6a47b;background:linear-gradient(115deg,#3a302f,#172a3b)}
+.board-page .champion-banner{order:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 24px;border:1px solid #b38b40;border-top:4px solid #ffdc71;background:radial-gradient(ellipse at 90% 0,#c29b3530,transparent 70%),linear-gradient(115deg,#574322,#272b28);border-radius:8px;color:#fff4c5}
+.board-page .champion-banner:after{content:'1';font:900 160px/1 'Space Grotesk';right:12px;top:10px;color:#ffdb76;opacity:.08;transform:none}
+.board-page .champion-crown{position:absolute;right:22px;top:14px;font-size:24px;animation:none;filter:none}
+.board-page #champion-label{font:700 12px 'Space Grotesk',system-ui;letter-spacing:.15em;color:#ffe08c;margin:0 0 5px}
+.board-page #champion-label:before{content:'01 / ';font-size:22px;letter-spacing:0}
+.board-page #champion-name{display:block;font-size:clamp(24px,2.6vw,40px);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff3c8}
+.board-page .champion-banner>div:not(.champion-points){width:calc(100% - 20px);min-width:0}
+.board-page #champion-id{font-size:11px;color:#dac69c;display:block;margin-top:4px}
+.board-page .champion-points{margin:4px 0 0;text-align:left;display:flex;align-items:baseline;gap:12px}
+.board-page #champion-score{font:700 clamp(36px,3.6vw,58px)/1.1 'Space Grotesk',monospace;color:#ffe08c;text-shadow:none;letter-spacing:-.03em}
+.board-page #champion-unit{font-size:11px;color:#dcc99d}
+.race-update{display:flex;align-items:center;gap:16px;min-height:42px;margin:0 20px 10px;padding:8px 14px;background:#082d38;border-left:3px solid #6ce7c1;border-radius:3px;font-size:14px;color:#ddfff3}
+.race-update>span{flex-shrink:0;font-size:10px;font-weight:900;letter-spacing:.12em;color:#71e9c5}.race-update strong{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.race-update.event-leader{background:#46381b;border-color:#ffde7e;color:#fff0bf}.race-update.event-leader>span{color:#ffde7e}
+.board-page table{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed}
+.board-page th{padding:8px 22px;background:#071a2e;font-size:10px;letter-spacing:.1em;color:#8eacc5}
+.board-page th:first-child{width:90px}.board-page th.rank-movement{width:136px}.board-page th.rank-state{width:165px}.board-page th:last-child{width:220px}
+.board-page td{height:clamp(40px,4.2vh,52px);padding:4px 22px;border-top:1px solid #28415a;background:#0c263f}
+.board-page tr:nth-child(even) td{background:#102c46}
+.board-page tr[data-rank="1"] td{background:#51432145;border-top-color:#a78b4f}.board-page tr[data-rank="2"] td{background:#becfe514}.board-page tr[data-rank="3"] td{background:#b6825e14}
+.board-page .rank-number{font:700 23px/1 'Space Grotesk',monospace;color:#8fabca}
+.board-page .rank-number>span{min-height:0;min-width:0;display:inline;background:none!important;border:0!important;box-shadow:none!important;color:inherit!important;border-radius:0}
+.board-page tr[data-rank="1"] .rank-number{color:#ffe28a}.board-page tr[data-rank="2"] .rank-number{color:#d9e7f6}.board-page tr[data-rank="3"] .rank-number{color:#f0b68f}
+.board-page .rank-name{font-size:clamp(16px,1.55vw,25px);font-weight:900;color:#f6f8ff;text-shadow:none}.board-page .rank-name small{font:10px 'Space Grotesk',sans-serif;color:#829fb9;margin-left:12px}
+.board-page .rank-score{font:700 clamp(24px,2.3vw,36px)/1.05 'Space Grotesk',monospace;color:#e8f4ff;text-shadow:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.board-page tr[data-rank="1"] .rank-score{color:#ffe28a}.score-delta{display:inline-block;color:#73edc4;font:700 12px 'Space Grotesk';margin-right:12px;vertical-align:middle}
+.board-page .rank-movement{text-align:center;font-size:13px;white-space:nowrap}
+.movement{display:inline-flex;align-items:center;justify-content:center;min-width:64px;padding:4px 7px;gap:5px;border-radius:4px;font:900 14px/1.2 'Space Grotesk',system-ui}
+.movement-up{color:#7af7cf;background:#1f8a6940}.movement-down{color:#ffab9b;background:#a7434230}.movement-new{color:#8fe2ff;background:#286eab40;letter-spacing:.08em;font-size:11px}.movement-same{color:#57758f}
+.board-page .rank-state{font-size:10px;color:#88aac4}.board-page .player-phase{font-size:10px;background:none;color:#8eafc8;border:0;padding:0}
+.board-page .ranking-foot{padding:10px 22px;background:#071b30;border:0}.board-page .ranking-foot>span{font-size:10px;color:#8babc7}.board-page .ranking-foot>small{font-size:10px;color:#6b8ba5}
+.board-page .rank-first,.board-page .rank-improved{background:none;animation:none}
+.board-page tr.is-rising td{box-shadow:inset 0 1px #71efb655,inset 0 -1px #71efb655}.board-page tr.is-rising td:first-child{border-left:3px solid #70efc2;padding-left:19px}
+.board-page .score-up{animation:board-score .9s ease-out}.board-page .notice{margin:8px 0;font-size:12px}
+.board-page .empty-state{min-height:230px}.board-page .empty-hero{display:none}
+.board-page .brick-ground{height:10px;opacity:.5}
+@keyframes board-score{0%,25%{color:#fff;filter:brightness(1.8)}100%{filter:brightness(1)}}
+.board-page .hype-banner{display:none}
+@media(min-width:1100px){.board-page .podium{max-height:190px}.board-page .podium-card,.board-page .champion-banner{min-height:0}.board-page td{height:clamp(34px,4vh,46px)}}
+@media(min-width:1100px) and (max-height:800px){.board-page .board-shell{padding-top:10px}.board-page .board-intro{margin-bottom:10px}.board-page .title-lockup h1{font-size:32px}.board-page .title-lockup>p{margin-top:3px}.board-page .big-clock strong{font-size:42px}.podium{padding-top:10px;padding-bottom:8px;gap:10px}.podium-card,.board-page .champion-banner{padding:9px 18px}.podium-score{font-size:32px}.board-page #champion-score{font-size:38px}.board-page #champion-name{font-size:27px}.podium-name{font-size:23px}.board-page td{height:36px}.board-page .rank-score{font-size:27px}.board-page .rank-name{font-size:19px}.race-update{min-height:34px;padding:5px 12px;margin-bottom:6px;font-size:12px}.board-page .panel-heading{padding:7px 20px}.board-page .ranking-foot{padding-top:7px;padding-bottom:7px}}
+@media(max-width:850px){.board-page .board-shell{padding:14px 14px 28px}.board-page .title-lockup h1{font-size:30px}.board-page .big-clock{min-width:210px;padding:8px 12px;gap:12px}.board-page .big-clock strong{font-size:40px}.podium{gap:8px;padding:12px}.podium-card,.board-page .champion-banner{padding:12px}.podium-name{font-size:20px}.board-page #champion-name{font-size:25px}.board-page #champion-score{font-size:38px}.podium-score{font-size:30px}.board-page .rank-state{display:none}.board-page th:last-child{width:160px}.board-page th.rank-movement{width:94px}.board-page th:first-child{width:66px}.board-page td,.board-page th{padding-left:14px;padding-right:14px}.race-update{margin-left:12px;margin-right:12px}.board-page .rank-name small{display:none}.board-page .champion-crown{display:none}}
+@media(max-width:520px){.board-page .site-header{padding:8px 12px}.board-page .brand{font-size:12px}.board-page .brand img{width:24px;height:24px}.board-page .connection{max-width:64px}.board-page .board-intro{gap:12px;align-items:center}.board-page .title-lockup h1{font-size:25px}.board-page .title-lockup>.eyebrow{font-size:8px;letter-spacing:0}.board-page .title-lockup>p{font-size:9px;line-height:1.4}.board-page .big-clock{min-width:127px;display:block;padding:8px}.board-page .big-clock strong{font-size:32px;margin:3px 0}.board-page .big-clock>span{font-size:9px;text-align:center}.board-page .timer-track{margin-top:5px}.podium{gap:6px;padding:10px 8px}.podium-card,.board-page .champion-banner{padding:10px 7px;gap:3px}.podium-rank{font-size:8px;letter-spacing:0}.podium-rank b{font-size:17px;margin-right:2px}.podium-name{font-size:14px}.podium-id{font-size:9px}.podium-score{font-size:23px}.podium-score small{display:none}.board-page #champion-name{font-size:17px}.board-page #champion-label{font-size:8px;letter-spacing:0}.board-page #champion-label:before{font-size:17px}.board-page #champion-id{font-size:9px}.board-page #champion-score{font-size:28px}.board-page #champion-unit{display:none}.race-update{margin:0 8px 8px;gap:8px;padding:7px 8px;font-size:11px;min-height:34px}.race-update>span{font-size:8px}.board-page .panel-heading{padding:8px 12px}.board-page .panel-heading h2{font-size:12px}.board-page .panel-heading>span{font-size:9px}.board-page td,.board-page th{padding-left:9px;padding-right:9px}.board-page th:first-child{width:43px}.board-page th.rank-movement{width:57px}.board-page th:last-child{width:100px}.board-page td{height:48px}.board-page .rank-number{font-size:20px}.board-page .rank-name{font-size:14px}.board-page .rank-score{font-size:24px}.movement{min-width:40px;font-size:11px;padding:4px}.movement-new{font-size:9px}.score-delta{font-size:9px;display:block;margin:0 0 1px}.board-page .ranking-foot>span{display:none}.board-page tr.is-rising td:first-child{padding-left:6px}}
+@media(min-width:1100px) and (max-height:800px){.board-page .podium{height:124px;padding-top:8px;padding-bottom:8px}.board-page .podium-id,.board-page #champion-id{display:none}.board-page .podium-card,.board-page .champion-banner{padding:8px 18px}.board-page .podium-rank,.board-page #champion-label{line-height:1.2;margin-bottom:0}.board-page .podium-name{font-size:21px}.board-page #champion-name{font-size:25px}.board-page .podium-score{font-size:29px}.board-page #champion-score{font-size:34px}.board-page td{height:32px}.board-page .rank-score{font-size:25px}.board-page th{padding-top:6px;padding-bottom:6px}.board-page .ranking-foot{padding-top:6px;padding-bottom:6px}}
+.podium-card>*,.board-page .champion-banner>*{flex-shrink:0}
+@media(min-width:1100px) and (min-height:801px){.board-page .podium{height:210px;max-height:none;grid-template-rows:minmax(0,1fr)}.board-page .podium-card,.board-page .champion-banner{height:100%;padding-top:12px;padding-bottom:12px}.board-page .rank-score{font-size:34px;line-height:1}.board-page td{height:44px}.board-page .champion-banner>div:not(.champion-points){flex:0 0 auto}.board-page .champion-points{flex:0 0 auto}.board-page #champion-name{font-size:36px}.board-page #champion-score{font-size:52px}}
+@media(min-width:1100px) and (max-height:800px){.board-page .podium-card,.board-page .champion-banner{padding:6px 18px;gap:2px}.board-page .podium-rank b{font-size:18px;line-height:1}.board-page .podium-rank{line-height:1}.board-page .podium-name{font-size:20px;line-height:1.25}.board-page .podium-score{font-size:29px;line-height:1}.board-page #champion-label:before{font-size:18px}.board-page #champion-name{font-size:24px;line-height:1.1}.board-page #champion-score{font-size:32px;line-height:1}.board-page .champion-points{margin:0}}
+/* One appearance per player: podium 1–3, list 4–10. */
+.board-page .panel-heading{padding:12px 20px;min-height:84px}
+.board-page .panel-heading>div:first-child{display:flex;align-items:center;gap:20px}
+.board-page #live-badge{font-size:11px;color:#71efc5}
+.board-page .panel-heading .big-clock{min-width:300px;background:none;border:0;padding:0;column-gap:18px}
+.board-page .panel-heading .big-clock strong{font-size:52px}
+.board-page .panel-heading .big-clock>span{font-size:10px}
+.podium-movement{position:absolute;right:16px;bottom:16px;min-width:56px}
+.board-page .podium{height:clamp(195px,24vh,270px);max-height:none;grid-template-rows:minmax(0,1fr)}
+.board-page td{height:clamp(46px,5.5vh,64px)}
+.board-page .rank-name{font-size:clamp(18px,1.65vw,29px)}
+.board-page .rank-score{font-size:clamp(27px,2.5vw,40px)}
+@media(min-width:1100px) and (max-height:800px){.board-page .panel-heading{min-height:74px;padding-top:8px;padding-bottom:8px}.board-page .panel-heading .big-clock strong{font-size:44px}.board-page .podium{height:168px}.board-page .podium-card,.board-page .champion-banner{padding:12px 18px;gap:4px}.board-page .podium-name{font-size:25px}.board-page #champion-name{font-size:30px}.board-page .podium-score{font-size:35px}.board-page #champion-score{font-size:42px}.board-page td{height:48px}.board-page .rank-score{font-size:31px}.board-page .rank-name{font-size:22px}}
+@media(max-width:850px){.board-page .panel-heading>div:first-child{display:block}.board-page #live-badge{display:block;margin-top:5px}.board-page .panel-heading .big-clock{min-width:230px}.board-page .panel-heading .big-clock strong{font-size:42px}.board-page .podium{height:190px}.podium-movement{right:9px;bottom:9px}}
+@media(max-width:520px){.board-page .panel-heading{padding:10px 12px;min-height:84px}.board-page .panel-heading h2{font-size:11px}.board-page .panel-heading .big-clock{display:grid;min-width:130px;column-gap:8px}.board-page .panel-heading .big-clock strong{font-size:34px;margin:0}.board-page .panel-heading .big-clock>span{font-size:8px;text-align:left}.board-page #live-badge{font-size:9px}.board-page .podium{height:174px}.podium-movement{font-size:10px;bottom:8px;right:7px;min-width:34px;padding:3px}.board-page td{height:54px}.board-page .rank-name{font-size:15px}.board-page .rank-score{font-size:25px}}
