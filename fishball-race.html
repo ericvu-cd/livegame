@@ -824,7 +824,7 @@
   </div>
 
   <!-- START (full screen) -->
-  <div class="overlay" id="startOverlay">
+  <div class="overlay hidden" id="startOverlay" style="display:none">
    <button type="button" id="startMuteBtn" class="start-mute-btn" aria-label="音效開關" aria-pressed="false">🔊</button>
    <button type="button" id="startHelpBtn" aria-label="遊戲說明" onclick="document.getElementById('helpOverlay').classList.add('show')">📖</button>
    <div class="start-bg-wrap" id="startBgWrap">
@@ -3448,6 +3448,7 @@
       // 分頁現在是隱藏的，暫停提示等真的切回來才顯示，不然使用者看不到。
     } else if (pausedForVisibility) {
       document.getElementById('pauseOverlay').classList.add('show');
+      window.dispatchEvent(new Event('fishball:pause'));
     }
   });
 
@@ -3455,6 +3456,7 @@
     document.getElementById('pauseOverlay').classList.remove('show');
     pausedForVisibility = false;
     bgm.play().catch(()=>{});
+    window.dispatchEvent(new Event('fishball:resume'));
     beginMotion(); // 跟一開始倒數結束時是同一段「真正開始移動」的邏輯，直接重用
   };
 
@@ -3488,7 +3490,8 @@
       document.getElementById('pauseOverlay').classList.remove('show');
       document.getElementById('gameCountdownOverlay').classList.remove('show');},
     reset(){this.stop();currentLevel=1;totalScore=0;resetState();draw();
-      startOverlay.classList.remove('hidden');startOverlay.style.display='';endOverlay.classList.add('hidden');},
+      // 競賽版不顯示原平台 START 前言畫面；由競賽狀態視窗控制何時可開始。
+      startOverlay.classList.add('hidden');startOverlay.style.display='none';endOverlay.classList.add('hidden');},
     snapshot(){return {score:totalScore+(roundFinalized||!endOverlay.classList.contains('hidden')?0:score),level:currentLevel,running};}
   };
   // init
