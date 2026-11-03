@@ -57,13 +57,13 @@ try{identity=JSON.parse(storage.getItem(key)||'null');$('player-name').value=ide
 const active=()=>!!service&&isRunning(race,service.now())&&navigator.onLine;
 const hasName=()=>!!$('player-name').value.trim();
 window.fishballRaceAllowed=()=>authorized&&active()&&!networkFailed&&!paused;
-function panel(title,notice,{expanded=true,name=true,join=false,joinText='開始競賽',resume=false,edit=false,editText='修改姓名'}={}){
+function panel(title,notice,{expanded=true,name=true,join=false,joinText='開始競賽',joinDisabled=false,resume=false,edit=false,editText='修改姓名'}={}){
  const box=$('race-dialog');
  box.hidden=false;box.classList.toggle('compact',!expanded);
  $('race-title').textContent=title;$('race-notice').textContent=notice||'';
  $('race-name-label').hidden=!name;
  $('join-btn').hidden=!join;$('join-btn').textContent=joinText;
- $('join-btn').disabled=busy||!active()||!hasName()||networkFailed;
+ $('join-btn').disabled=joinDisabled||authorized||busy||!active()||!hasName()||networkFailed;
  $('race-edit').hidden=!edit;$('race-edit').textContent=editText;$('resume-btn').hidden=!resume;
  if(expanded&&name&&!authorized)$('player-name').focus();
 }
@@ -72,11 +72,10 @@ function renderReady(){
 }
 function renderRunning(){
  paused=false;$('race-player').textContent=hasName()?' · '+$('player-name').value.trim():'';
- // Before this player joins, keep the status window expanded so the name
- // field and the actual start button are both visible. Collapse only after
- // the player has been authorized and the game is underway.
- if(authorized){panel('競賽中','', {expanded:false,name:false,join:false});return;}
- panel('競賽中','請輸入玩家名字，按下「開始競賽」加入本場比賽。',{expanded:true,name:true,join:true,joinText:'開始競賽'});
+  // Keep the competition window and its action button visible throughout
+  // the running state. After joining, show a disabled confirmation button.
+  if(authorized){panel('競賽中','玩家：'+(identity?.name||''),{expanded:true,name:false,join:true,joinText:'已加入競賽',joinDisabled:true});return;}
+  panel('競賽中','請輸入玩家名字，按下「開始競賽」加入本場比賽。',{expanded:true,name:true,join:true,joinText:'開始競賽'});
 }
 function renderEnded(text='本場競賽已結束。'){
  paused=false;panel('已結束',text,{expanded:true,name:false,join:false});
@@ -96,8 +95,8 @@ function stop(text){
 function openJoin(){
  if(!active()){renderCurrent();return;}
  if(authorized){
-  panel('競賽中','玩家：'+(identity?.name||''),{expanded:true,name:true,join:true,joinText:'重新開始競賽'});
-  $('player-name').value=identity?.name||'';
+   panel('競賽中','玩家：'+(identity?.name||''),{expanded:true,name:false,join:true,joinText:'已加入競賽',joinDisabled:true});
+   return;
   return;
  }
  renderRunning();
@@ -114,7 +113,7 @@ $('race-edit').onclick=()=>{
  $('player-name').focus();
 };
 $('player-name').addEventListener('input',()=>{
- $('join-btn').disabled=busy||!active()||!hasName()||networkFailed;
+ $('join-btn').disabled=joinDisabled||authorized||busy||!active()||!hasName()||networkFailed;
  if(active()&&hasName()&&!authorized){
   // Keep the expanded form open while typing; collapse only after leaving it.
  }
@@ -136,13 +135,13 @@ $('join-form').onsubmit=async e=>{
   if(race.roundId!==nextRound||!active())throw Error('本場已截止。');
   record=saved;round=nextRound;authorized=true;networkFailed=false;lastSent='';reportedLevels=new Set();
   $('race-player').textContent=' · '+name;
-  $('race-dialog').classList.add('compact');$('race-dialog').hidden=false;
-  $('race-title').textContent='競賽中';$('race-name-label').hidden=true;$('race-notice').textContent='';$('join-btn').hidden=true;$('race-edit').hidden=true;
+    panel('競賽中','玩家：'+name,{expanded:true,name:false,join:true,joinText:'已加入競賽',joinDisabled:true});
+   $('race-edit').hidden=true;
   replaying=true;$('startBtn').click();replaying=false;
  }catch(error){
   replaying=false;
   panel(active()?'競賽中':'已結束',friendlyError(error),{expanded:true,name:true,join:active(),joinText:'開始競賽'});
- }finally{busy=false;$('join-btn').disabled=!active()||!hasName()||networkFailed;}
+ }finally{busy=false;$('join-btn').disabled=authorized||!active()||!hasName()||networkFailed;}
 };
 window.fishballRaceLevelComplete=payload=>{
  if(!authorized||!record||!active()||record.phase==='finished')return;
@@ -179,7 +178,7 @@ $('resume-btn').onclick=()=>{
  window.resumeFromPause();
 };
 window.addEventListener('fishball:pause',renderPaused);
-window.addEventListener('fishball:resume',()=>{paused=false;if(authorized&&active())panel('競賽中','',{expanded:false,name:false,join:false});});
+window.addEventListener('fishball:resume',()=>{paused=false;if(authorized&&active())panel('競賽中','玩家：'+(identity?.name||''),{expanded:true,name:false,join:true,joinText:'已加入競賽',joinDisabled:true});});
 window.addEventListener('offline',()=>{
  if(!authorized)return;networkFailed=true;window.fishballOriginal.stop();
  panel('網路中斷','競賽倒數持續進行。請恢復連線後重試同步。',{expanded:true,name:false,join:false});$('race-retry').hidden=false;
