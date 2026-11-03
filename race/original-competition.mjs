@@ -72,9 +72,11 @@ function renderReady(){
 }
 function renderRunning(){
  paused=false;$('race-player').textContent=hasName()?' · '+$('player-name').value.trim():'';
+ // Before this player joins, keep the status window expanded so the name
+ // field and the actual start button are both visible. Collapse only after
+ // the player has been authorized and the game is underway.
  if(authorized){panel('競賽中','', {expanded:false,name:false,join:false});return;}
- if(hasName())panel('競賽中','', {expanded:false,name:false,join:true,joinText:'開始競賽',edit:true,editText:'修改姓名'});
- else panel('競賽中','', {expanded:false,name:false,join:false,edit:true,editText:'輸入姓名'});
+ panel('競賽中','請輸入玩家名字，按下「開始競賽」加入本場比賽。',{expanded:true,name:true,join:true,joinText:'開始競賽'});
 }
 function renderEnded(text='本場競賽已結束。'){
  paused=false;panel('已結束',text,{expanded:true,name:false,join:false});
