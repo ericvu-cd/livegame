@@ -2661,6 +2661,7 @@
     clearInterval(timerId);
     SFX.ambientStop();
     totalScore += score;
+    window.fishballRaceAttemptEnded?.({score:totalScore,level:currentLevel,reason});
 
     let iconKey = 'lantern', title = '收網了';
     if(reason.includes('潮水')){ iconKey = 'wave'; title = '被潮水追上了'; }

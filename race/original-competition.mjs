@@ -74,13 +74,15 @@ $('join-form').onsubmit=e=>{
   if(active())$('race-status-panel').hidden=true;else waitingPanel();
  }catch(error){$('race-notice').textContent=friendlyError(error);}
 };
-window.fishballRaceLevelComplete=payload=>{
+function queueScore(payload){
  if(!authorized||!record||!active()||record.phase==='finished')return;
- if(reportedLevels.has(payload.level))return;
- reportedLevels.add(payload.level);
+ if(payload.kind==='level'&&reportedLevels.has(payload.level))return;
+ if(payload.kind==='level')reportedLevels.add(payload.level);
  const signature=JSON.stringify(payload);if(signature===lastSent)return;lastSent=signature;
  pending={...payload,round,id:identity.id,attempt:record.attempt};void pump();
-};
+}
+window.fishballRaceLevelComplete=payload=>queueScore({...payload,kind:'level'});
+window.fishballRaceAttemptEnded=payload=>queueScore({...payload,finished:false,kind:'attempt-end'});
 async function pump(){
  if(sending||!pending||!active())return;
  const p=pending;pending=null;sending=true;
