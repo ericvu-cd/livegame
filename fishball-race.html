@@ -2653,6 +2653,7 @@
     finalizeGameOver(reason);
   }
   function finalizeGameOver(reason){
+    window.fishballRaceGameState?.('static');
     if (roundFinalized) return;
     roundFinalized = true;
     running = false;
@@ -2774,6 +2775,7 @@
     totalScore += score;
 
     window.fishballRaceLevelComplete?.({score:totalScore,level:currentLevel,finished:currentLevel >= LEVELS.length});
+    if(currentLevel >= LEVELS.length) window.fishballRaceGameState?.('static');
     const isFinal = currentLevel >= LEVELS.length;
     SFX.win(); vibrate([30,50,30,50,90]);
     endEmojiImg.src = ICONS.trophy;
@@ -3370,6 +3372,7 @@
   // ---------- START / RESTART ----------
   function startGame(withCountdown){
     if(!window.fishballRaceAllowed?.()) return;
+    window.fishballRaceGameState?.('playing');
     roundFinalized = false;
     SFX.unlock();
     SFX.start();
@@ -3484,7 +3487,7 @@
   });
 
   window.fishballOriginal = {
-    stop(){competitionCountdownGeneration++;running=false;stopIntervals();SFX.ambientStop();bgm.pause();pausedForVisibility=false;
+    stop(){competitionCountdownGeneration++;running=false;stopIntervals();SFX.ambientStop();bgm.pause();pausedForVisibility=false;window.fishballRaceGameState?.('static');
       document.getElementById('pauseOverlay').classList.remove('show');
       document.getElementById('gameCountdownOverlay').classList.remove('show');},
     reset(){this.stop();currentLevel=1;totalScore=0;resetState();draw();
