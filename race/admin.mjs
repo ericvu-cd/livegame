@@ -1,11 +1,7 @@
 import { createService, demo, friendlyError } from './service.mjs';
 import { durationSeconds, isRunning, formatClock } from './model.mjs';
-import { pageURL } from './navigation.mjs';
 const $=id=>document.getElementById(id);
 let service,race=null,busy=false,confirmed=false;
-const boardURL=pageURL('fishball-race-board.html'),playURL=pageURL('fishball-race.html');
-$('board-link').href=boardURL.href;$('board-url').textContent=boardURL.href;
-$('play-link').href=playURL.href;$('play-url').textContent=playURL.href;
 if(demo)$('demo-label').hidden=false;
 try{
   const stored=JSON.parse(localStorage.getItem('fishball-race-admin-duration')||'null');
@@ -50,9 +46,6 @@ $('reset-btn').addEventListener('click',()=>{
   const roundId=race?.roundId;
   if(!roundId||!confirm('重置本場排行榜？展示榜會清空，所有玩家將回到等待畫面。'))return;
   void act(()=>service.resetRace(roundId),'排行榜已重置，請設定時間後開始新一場。');
-});
-for(const [id,url]of [['copy-board',boardURL],['copy-player',playURL]])$(id).addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(url.href);notice('網址已複製。');}catch{notice('請手動複製上方網址。');}
 });
 window.addEventListener('offline',()=>{confirmed=false;connection(false,'離線 · 無法操作');tick();});
 window.addEventListener('online',async()=>{

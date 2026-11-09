@@ -48,13 +48,7 @@
 .danger-button{background:linear-gradient(#ff9a70 0 12%,#e44b3a 12% 85%,#a92c2c 85%);color:#fff6de;border-color:#421e2d;box-shadow:inset 2px 2px #ffc298,0 4px #14203c;text-shadow:1px 1px #883427}
 .manager-help{background:#0a254b;padding:12px 14px;border-left:3px solid #ffd354;margin:20px 0 15px;color:#c0daf2}
 .manager-links{padding:24px;background:linear-gradient(#174a81,#133464)}
-.manager-links>h2{color:#fff1b1;margin-bottom:20px}
-.role-link{display:flex;align-items:center;gap:14px;margin:18px 0 8px;color:#ffe26f}
-.role-link>b{font:1.1rem var(--pixel);color:#102b4a;background:#ffdc4c;padding:12px 9px;border:2px solid #0a213e;box-shadow:2px 3px #09254c}
-.role-link>span{min-width:0;display:block}.role-link strong{font-size:.95rem;display:block}
-.role-link small{color:#b7d6ed;font-size:.7rem;line-height:1.6;display:block;margin-top:4px}
-.endpoint{font-size:.63rem;overflow-wrap:anywhere;color:#accee9;margin:6px 0 10px}
-.manager-guide{border-top:2px solid #6a99bf66;margin-top:24px;padding-top:18px}
+.manager-guide{padding-top:2px}
 .manager-guide>strong{font-size:.84rem;color:#ffdf6e}
 .manager-guide ol{margin:12px 0 0;padding-left:21px;color:#c6def4;font-size:.74rem;line-height:2}
 .manager-links #demo-label{font-size:.65rem}
