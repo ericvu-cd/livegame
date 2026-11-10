@@ -4,6 +4,7 @@ import { ArcadeAudio, announce, confetti } from './effects.mjs';
 import { pageURL } from './navigation.mjs';
 import { RankingView } from './board-ranking.mjs';
 const $=id=>document.getElementById(id),audio=new ArcadeAudio($('sound-btn'));
+audio.music.pause();audio.music.muted=true;
 const ranking=new RankingView(audio);
 let leaderId=null,lastWarningSecond=null;
 let service,race=null,unwatchTop=()=>{},frozen=false,finalLoading=false,finalComplete=false,lastFinalTry=-Infinity,celebrationStarted=false;
@@ -34,7 +35,8 @@ async function finalize(roundId){
   if(finalLoading||finalComplete||race?.roundId!==roundId)return;
   frozen=true;finalLoading=true;lastFinalTry=performance.now();unwatchTop();unwatchTop=()=>{};
   try{
-    const wait=Math.max(0,(race.endsAt-service.now())+(service.clockUncertainty||0)+150);
+    const deadlineGrace=race.status==='running'?8000:0;
+    const wait=Math.max(0,(race.endsAt-service.now())+deadlineGrace+(service.clockUncertainty||0)+150);
     if(wait)await new Promise(resolve=>setTimeout(resolve,Math.min(wait,15000)));
     const players=await service.finalTop(roundId);
     if(race?.roundId===roundId){

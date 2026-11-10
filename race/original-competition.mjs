@@ -42,6 +42,11 @@ function syncPanel(){
  else panel('競賽已結束','本場競賽已結束，請等待下一場。',{name:!!identity,close:false});
 }
 function stop(text){
+ const hitDeadline=race?.status==='running'&&service.now()>=race.endsAt;
+ if(hitDeadline&&authorized&&record?.phase==='playing'){
+  const final=window.fishballOriginal.snapshot();
+  void service.report(round,identity.id,record.attempt,final.score,final.level,false,true).then(saved=>{record=saved;}).catch(()=>{});
+ }
  authorized=false;pending=null;terminal=true;setPlaying(false);window.fishballOriginal.stop();
  panel('競賽已截止',text+`\n已同步個人最高：${record?.bestScore??0} 分。正在取得最終名次…`,{close:false});
  void showFinalRank();

@@ -519,7 +519,7 @@ service cloud.firestore {
         && d.completedBestScore is int && d.completedBestScore >= -100000 && d.completedBestScore <= 1000000
         && d.bestScore == fbRaceMaxScore(d.completedBestScore,d.currentScore)
         && d.attempt is int && d.attempt >= 1
-        && d.phase in ['playing','finished']
+        && d.phase in ['playing','finished','ended']
         && d.level is int && d.level >= 1 && d.level <= 10
         && d.updatedAt == request.time;
     }
@@ -570,8 +570,12 @@ service cloud.firestore {
           && request.resource.data.attempt == 1 && request.resource.data.phase == 'playing'
           && request.resource.data.currentScore == 0 && request.resource.data.bestScore == 0
           && request.resource.data.completedBestScore == -100000 && request.resource.data.level == 1;
-        allow update: if fbRaceLive(roundId)
-          && fbRaceValidPlayer(request.resource.data) && fbRaceValidUpdate(request.resource.data,resource.data);
+        allow update: if fbRaceValidPlayer(request.resource.data) && fbRaceValidUpdate(request.resource.data,resource.data)
+          && (fbRaceLive(roundId) || (resource.data.phase == 'playing' && request.resource.data.phase == 'ended'
+            && request.time >= get(/databases/$(database)/documents/fishballRaceRounds/$(roundId)).data.startedAt
+              + duration.value(get(/databases/$(database)/documents/fishballRaceRounds/$(roundId)).data.duration,'s')
+            && request.time < get(/databases/$(database)/documents/fishballRaceRounds/$(roundId)).data.startedAt
+              + duration.value(get(/databases/$(database)/documents/fishballRaceRounds/$(roundId)).data.duration,'s') + duration.value(8,'s')));
         allow delete: if false;
       }
     }

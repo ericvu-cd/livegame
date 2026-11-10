@@ -70,16 +70,16 @@ export class DemoService {
       return s.players[roundId][id] = { ...startAttempt(previous, name, this.uid), id };
     });
   }
-  async report(roundId, id, attempt, score, level, finished) {
+  async report(roundId, id, attempt, score, level, finished, ended=false) {
     return this.mutate(s => {
-      this.assertActive(s, roundId);
+      this.assertActive(s, roundId, ended);
       const previous = s.players[roundId]?.[id];
-      return s.players[roundId][id] = { ...scoreUpdate(previous, attempt, score, level, finished), id };
+      return s.players[roundId][id] = { ...scoreUpdate(previous, attempt, score, level, finished, ended), id };
     });
   }
-  assertActive(s, roundId) {
+  assertActive(s, roundId, ended=false) {
     if (!navigator.onLine) throw new Error('目前離線，請重新連線。');
-    if (s.control?.roundId !== roundId || !isRunning(s.control, this.now())) throw new Error('競賽已截止或已重置，成績不再更新。');
+    if (s.control?.roundId !== roundId || (!isRunning(s.control, this.now()) && !(ended&&s.control?.status==='running'&&this.now()<s.control.endsAt+8000))) throw new Error('競賽已截止或已重置，成績不再更新。');
   }
 }
 

@@ -99,13 +99,14 @@ export class FirebaseService {
       tx.set(this.controlRef, { roundId: null, status: 'ready', startedAt: null, duration: 0, hostUid: this.uid });
     });
   }
-  async writePlayer(roundId, id, fn) {
+  async writePlayer(roundId, id, fn, allowDeadlineFinal=false) {
     if (!navigator.onLine) throw new Error('目前離線，請重新連線。');
     const playerRef = doc(this.db, paths.rounds, roundId, 'players', id);
     return runTransaction(this.db, async tx => {
       const [control, previous] = await Promise.all([tx.get(this.controlRef), tx.get(playerRef)]);
       const race = this.decodeRace(control.data());
-      if (race?.roundId !== roundId || !isRunning(race, this.now())) throw new Error('競賽已截止或已重置，成績不再更新。');
+      const deadlineFinal=allowDeadlineFinal&&race?.status==='running'&&this.now()<race.endsAt+8000;
+      if (race?.roundId !== roundId || (!isRunning(race, this.now())&&!deadlineFinal)) throw new Error('競賽已截止或已重置，成績不再更新。');
       const data = fn(previous.exists() ? previous.data() : null);
       delete data.id; delete data.updatedAt;
       tx.set(playerRef, { ...data, updatedAt: serverTimestamp() });
@@ -113,6 +114,6 @@ export class FirebaseService {
     }, { maxAttempts: 3 });
   }
   async startPlayer(roundId, id, name) { return this.writePlayer(roundId, id, previous => startAttempt(previous, name, this.deviceId)); }
-  async report(roundId, id, attempt, score, level, finished) { return this.writePlayer(roundId, id, previous => scoreUpdate(previous, attempt, score, level, finished)); }
+  async report(roundId, id, attempt, score, level, finished, ended=false) { return this.writePlayer(roundId, id, previous => scoreUpdate(previous, attempt, score, level, finished, ended), ended); }
 }
 
