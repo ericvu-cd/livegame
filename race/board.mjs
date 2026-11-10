@@ -37,15 +37,20 @@ async function finalize(roundId){
   try{
     const deadlineGrace=race.status==='running'?8000:0;
     const wait=Math.max(0,(race.endsAt-service.now())+deadlineGrace+(service.clockUncertainty||0)+150);
-    if(wait)await new Promise(resolve=>setTimeout(resolve,Math.min(wait,15000)));
+    if(wait){
+      let overlay=document.getElementById('finalizing-overlay');
+      if(!overlay){overlay=document.createElement('div');overlay.id='finalizing-overlay';overlay.style.cssText='position:fixed;inset:0;z-index:29000;display:grid;place-items:center;background:#eaf8fff5;padding:20px;text-align:center';overlay.innerHTML='<div style="padding:28px 36px;border:3px solid #8fc8e5;border-radius:16px;background:#fff;box-shadow:0 12px 40px #547e9a33"><strong style="display:block;color:#245675">正在結算最後成績</strong><span style="display:block;margin-top:8px;color:#527795">請稍候，排行榜即將鎖定</span></div>';document.body.append(overlay);}
+      await new Promise(resolve=>setTimeout(resolve,Math.min(wait,15000)));
+    }
     const players=await service.finalTop(roundId);
     if(race?.roundId===roundId){
       render(players);finalComplete=true;notice(race.status==='stopped'?'主持人已停止本場，最終排名已鎖定。':'競賽結束，最終排名已鎖定。');
+      document.getElementById('finalizing-overlay')?.remove();
       connection(true,demo?'本機示範':'最終排名已確認');
       if(players.length){announce('本場魚丸王！',players[0].name+' · '+players[0].bestScore.toLocaleString('zh-TW')+' 分');confetti();audio.cue('win');}
       void celebrateFinal(players,roundId);
     }
-  }catch(error){if(race?.roundId===roundId){notice('無法取得最終排名，重新連線後會再確認。 '+friendlyError(error),true);connection(false,'最終排名待確認');}}
+  }catch(error){if(race?.roundId===roundId){document.getElementById('finalizing-overlay')?.remove();notice('無法取得最終排名，重新連線後會再確認。 '+friendlyError(error),true);connection(false,'最終排名待確認');}}
   finally{finalLoading=false;tick();}
 }
 async function celebrateFinal(players,roundId){

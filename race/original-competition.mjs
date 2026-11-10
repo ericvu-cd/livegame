@@ -46,14 +46,18 @@ async function stop(text){
  const shouldBank=hitDeadline&&authorized&&record?.phase==='playing';
  authorized=false;pending=null;terminal=true;setPlaying(false);window.fishballOriginal.stop();
  panel('競賽已截止',text+`\n已同步個人最高：${record?.bestScore??0} 分。正在取得最終名次…`,{close:false});
+ let finalSaved=!shouldBank;
  if(shouldBank){
   try{
    while(sending)await new Promise(resolve=>setTimeout(resolve,25));
    const final=window.fishballOriginal.snapshot();
    record=await service.report(round,identity.id,record.attempt,final.score,final.level,false,true);
-  }catch(error){$('race-notice').textContent='最後分數尚未同步：'+friendlyError(error);}
+   finalSaved=true;
+  }catch(error){
+   panel('最後分數尚未同步','無法確認本局最終分數，暫不顯示舊排名。請重新整理後查看看板。\n'+friendlyError(error),{close:false});
+  }
  }
- await showFinalRank();
+ if(finalSaved)await showFinalRank();
 }
 async function showFinalRank(){try{if(!identity||!round)return;const result=await service.finalRank(round,identity.id);if(round!==race?.roundId)return;$('race-final-name').textContent=identity.name;$('race-final-rank').textContent=result?'第 '+result.rank+' 名':'未列入排名';$('race-final-detail').textContent=result?`共 ${result.total} 位玩家 · ${result.player.bestScore.toLocaleString('zh-TW')} 分`:'本場沒有找到你的成績';$('race-status-panel').hidden=true;$('race-final').hidden=false;}catch(error){panel('最終名次暫不可用',friendlyError(error),{close:false});}}
 $('race-final-confirm').onclick=()=>{$('race-final').hidden=true;};
