@@ -39,7 +39,7 @@ async function finalize(roundId){
     const wait=Math.max(0,(race.endsAt-service.now())+deadlineGrace+(service.clockUncertainty||0)+150);
     if(wait){
       let overlay=document.getElementById('finalizing-overlay');
-      if(!overlay){overlay=document.createElement('div');overlay.id='finalizing-overlay';overlay.style.cssText='position:fixed;inset:0;z-index:29000;display:grid;place-items:center;background:#eaf8fff5;padding:20px;text-align:center';overlay.innerHTML='<div style="padding:28px 36px;border:3px solid #8fc8e5;border-radius:16px;background:#fff;box-shadow:0 12px 40px #547e9a33"><strong style="display:block;color:#245675">正在結算最後成績</strong><span style="display:block;margin-top:8px;color:#527795">請稍候，排行榜即將鎖定</span></div>';document.body.append(overlay);}
+      if(!overlay){overlay=document.createElement('div');overlay.id='finalizing-overlay';overlay.style.cssText='position:fixed;inset:0;z-index:29000;display:grid;place-items:center;background:#eaf8fff5;padding:20px;text-align:center';overlay.innerHTML='<div style="padding:28px 36px;border:3px solid #8fc8e5;border-radius:16px;background:#fff;box-shadow:0 12px 40px #547e9a33"><strong style="display:block;color:#245675;font-size:clamp(32px,6vw,56px)">結算中</strong><span style="display:block;margin-top:8px;color:#527795">正在彙整最後成績，請稍候</span></div>';document.body.append(overlay);}
       await new Promise(resolve=>setTimeout(resolve,Math.min(wait,15000)));
     }
     const players=await service.finalTop(roundId);
