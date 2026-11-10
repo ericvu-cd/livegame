@@ -64,6 +64,11 @@ export class FirebaseService {
     const snap = await getDocsFromServer(this.topQuery(roundId));
     return snap.docs.map(d => ({ ...d.data(), id: d.id }));
   }
+  async finalRank(roundId,id) {
+    const snap=await getDocsFromServer(query(collection(this.db,paths.rounds,roundId,'players'),orderBy('bestScore','desc')));
+    const all=snap.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0));
+    const index=all.findIndex(p=>p.id===id);return index<0?null:{rank:index+1,total:all.length,player:all[index]};
+  }
   async startRace(duration) {
     if (!this.host) throw new Error('請使用管理操控頁面。');
     await this.syncClock();

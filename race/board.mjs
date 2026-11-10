@@ -6,7 +6,7 @@ import { RankingView } from './board-ranking.mjs';
 const $=id=>document.getElementById(id),audio=new ArcadeAudio($('sound-btn'));
 const ranking=new RankingView(audio);
 let leaderId=null,lastWarningSecond=null;
-let service,race=null,unwatchTop=()=>{},frozen=false,finalLoading=false,finalComplete=false,lastFinalTry=-Infinity;
+let service,race=null,unwatchTop=()=>{},frozen=false,finalLoading=false,finalComplete=false,lastFinalTry=-Infinity,celebrationStarted=false;
 $('play-link').href=pageURL('fishball-race.html').href;
 function notice(message='',error=false){$('notice').textContent=message;$('notice').classList.toggle('error',error);}
 function connection(ok,text){$('connection').textContent=text;$('connection').classList.toggle('offline',!ok);}
@@ -41,9 +41,17 @@ async function finalize(roundId){
       render(players);finalComplete=true;notice(race.status==='stopped'?'主持人已停止本場，最終排名已鎖定。':'競賽結束，最終排名已鎖定。');
       connection(true,demo?'本機示範':'最終排名已確認');
       if(players.length){announce('本場魚丸王！',players[0].name+' · '+players[0].bestScore.toLocaleString('zh-TW')+' 分');confetti();audio.cue('win');}
+      void celebrateFinal(players,roundId);
     }
   }catch(error){if(race?.roundId===roundId){notice('無法取得最終排名，重新連線後會再確認。 '+friendlyError(error),true);connection(false,'最終排名待確認');}}
   finally{finalLoading=false;tick();}
+}
+async function celebrateFinal(players,roundId){
+ if(celebrationStarted||!players.length)return;celebrationStarted=true;
+ const winner=players[0];$('final-winner').textContent=winner.name;$('final-winner-score').textContent=winner.bestScore.toLocaleString('zh-TW')+' 分';
+ const overlay=$('final-celebration');overlay.hidden=false;
+ for(let n=10;n>0;n--){if(race?.roundId!==roundId){overlay.hidden=true;return;}$('final-celebration-count').textContent=n;await new Promise(resolve=>setTimeout(resolve,1000));}
+ if(race?.roundId===roundId)overlay.hidden=true;
 }
 $('fullscreen-btn').addEventListener('click',async()=>{
   audio.unlock();
@@ -59,7 +67,7 @@ try{
   service.watchRace((next,meta={})=>{
     const changed=race?.roundId!==next?.roundId;race=next;
     if(changed){
-      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;ranking.reset();leaderId=null;lastWarningSecond=null;render([]);notice();
+      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;celebrationStarted=false;ranking.reset();leaderId=null;lastWarningSecond=null;render([]);notice();$('final-celebration').hidden=true;
       $('hype-banner').classList.remove('hype-show');$('celebration').replaceChildren();
       if(next?.roundId&&isRunning(next,service.now())){
         if(service.now()-next.startedAt<3000){announce('GO！全場開戰','吃好魚、衝高分，挑戰魚丸王！');audio.cue('go');}

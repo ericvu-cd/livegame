@@ -39,6 +39,7 @@ export class DemoService {
   watchRace(cb) { const fn = () => cb(this.state().control); this.listeners.add(fn); fn(); return () => this.listeners.delete(fn); }
   watchTop(roundId, cb) { const fn = () => cb(topTen(Object.values(this.state().players[roundId] || {}))); this.listeners.add(fn); fn(); return () => this.listeners.delete(fn); }
   async finalTop(roundId) { return topTen(Object.values(this.state().players[roundId] || {})); }
+  async finalRank(roundId,id) { const all=Object.values(this.state().players[roundId]||{}).sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0)); const i=all.findIndex(p=>p.id===id); return i<0?null:{rank:i+1,total:all.length,player:all[i]}; }
   async startRace(duration) {
     if (!this.host) throw new Error('請使用管理操控頁面。');
     return this.mutate(s => {

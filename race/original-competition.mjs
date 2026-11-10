@@ -12,8 +12,9 @@ shell.innerHTML=`<style>
  #race-status-panel h2{margin:0 0 12px;color:#ffd56b} #race-status-panel input{box-sizing:border-box;width:100%;padding:12px;font:inherit;border-radius:8px;border:2px solid #e9b94a;margin:8px 0}
  #race-status-panel button{padding:10px 16px;margin:8px 5px 0 0;font:inherit;border:0;border-radius:8px;background:#ffce59;color:#15334b;font-weight:bold} #race-status-panel button:disabled{opacity:.5}
  #race-notice{white-space:pre-line;color:#ffe8a3} #race-connection{font-size:12px}
+ #race-final{position:fixed;inset:0;z-index:25000;background:#041326ed;display:grid;place-items:center;padding:20px;color:#fff;text-align:center;font:16px/1.6 system-ui}#race-final[hidden]{display:none}#race-final>div{width:min(390px,100%);padding:30px 24px;border:4px solid #efc44c;border-radius:16px;background:linear-gradient(#1b4d76,#102c4b);box-shadow:0 0 40px #ffd65a55}#race-final strong{display:block;font-size:64px;color:#ffe178;line-height:1.3}#race-final button{font:inherit;font-weight:900;background:#ffce59;border:0;border-radius:8px;padding:12px 32px;margin-top:18px;color:#17334d}
  </style><div id="race-strip"><span id="race-status">連線中</span> · <strong id="race-clock">00:00</strong> <span id="race-player"></span> <span id="race-connection"></span></div>
- <div id="race-status-panel" hidden><form id="join-form"><h2 id="race-title">競賽狀態</h2><label id="race-name-label">玩家名字<input id="player-name" maxlength="40" autocomplete="nickname" required placeholder="請輸入名字"></label><div id="race-notice" role="status"></div><button id="join-btn" type="submit">儲存名字</button><button id="race-close" type="button">關閉</button></form></div>`;
+ <div id="race-status-panel" hidden><form id="join-form"><h2 id="race-title">競賽狀態</h2><label id="race-name-label">玩家名字<input id="player-name" maxlength="40" autocomplete="nickname" required placeholder="請輸入名字"></label><div id="race-notice" role="status"></div><button id="join-btn" type="submit">儲存名字</button><button id="race-close" type="button">關閉</button></form></div><div id="race-final" hidden><div><h2>本場最終排名</h2><span id="race-final-name"></span><strong id="race-final-rank">—</strong><span id="race-final-detail"></span><button id="race-final-confirm" type="button">確認</button></div></div>`;
 document.body.append(shell);
 const $=id=>document.getElementById(id),storage=demo?sessionStorage:localStorage,key='fishball-race-v2-identity';
 let service,race,identity,record,round,authorized=false,busy=false,sending=false,pending,lastSent='',launchingOriginal=false,networkFailed=false,terminal=false;
@@ -42,8 +43,11 @@ function syncPanel(){
 }
 function stop(text){
  authorized=false;pending=null;terminal=true;setPlaying(false);window.fishballOriginal.stop();
- panel('競賽已截止',text+`\n已同步個人最高：${record?.bestScore??0} 分。最終名次請看現場看板。`,{close:false});
+ panel('競賽已截止',text+`\n已同步個人最高：${record?.bestScore??0} 分。正在取得最終名次…`,{close:false});
+ void showFinalRank();
 }
+async function showFinalRank(){try{if(!identity||!round)return;const result=await service.finalRank(round,identity.id);if(round!==race?.roundId)return;$('race-final-name').textContent=identity.name;$('race-final-rank').textContent=result?'第 '+result.rank+' 名':'未列入排名';$('race-final-detail').textContent=result?`共 ${result.total} 位玩家 · ${result.player.bestScore.toLocaleString('zh-TW')} 分`:'本場沒有找到你的成績';$('race-status-panel').hidden=true;$('race-final').hidden=false;}catch(error){panel('最終名次暫不可用',friendlyError(error),{close:false});}}
+$('race-final-confirm').onclick=()=>{$('race-final').hidden=true;};
 async function startAttempt(){
  if(launchingOriginal||busy)return;
  if(!active()){syncPanel();return;}

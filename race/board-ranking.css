@@ -67,6 +67,7 @@
 .podium-card>*,.board-page .champion-banner>*{flex-shrink:0}
 /* Light public-display theme: the ranking remains the visual focus without a dark backdrop. */
 .board-page{background:linear-gradient(180deg,#edfaff 0,#c9ecff 58%,#eaf8ff 100%);color:#153450}
+#final-celebration{position:fixed;inset:0;z-index:30000;display:grid;place-items:center;background:#eaf8fff2;padding:20px;text-align:center}#final-celebration[hidden]{display:none}#final-celebration>div{width:min(700px,92vw);padding:40px 24px;border:5px solid #e1b834;border-radius:22px;background:radial-gradient(circle at 50% 0,#fff5c8,#fff 70%);box-shadow:0 18px 60px #547e9a55;animation:final-pop .6s cubic-bezier(.2,.8,.2,1)}#final-celebration span,#final-celebration small{display:block;color:#37617c;font-weight:800}#final-celebration strong{display:block;font-size:clamp(34px,7vw,72px);color:#875000;margin:10px 0}#final-celebration b{display:block;font-size:clamp(28px,5vw,54px);color:#c17a00}#final-celebration i{display:grid;place-items:center;margin:20px auto 0;width:54px;height:54px;border-radius:50%;background:#1c5980;color:#fff;font:900 24px system-ui;font-style:normal}@keyframes final-pop{from{transform:scale(.75);opacity:0}to{transform:scale(1);opacity:1}}
 .board-page .site-header{background:#ffffffed;border-bottom-color:#94c7e7;box-shadow:0 2px 10px #4e91bb2e}
 .board-page .brand{color:#123b62}.board-page .brand span{color:#527795}
 .board-page .connection{color:#27694e}.board-page .header-actions .ghost{background:#f7fcff;color:#1a527d;border-color:#8ec3e7;box-shadow:0 2px #75a9cf}
