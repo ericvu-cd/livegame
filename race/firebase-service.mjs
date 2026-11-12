@@ -60,6 +60,18 @@ export class FirebaseService {
       cb(snap.docs.map(d => ({ ...d.data(), id: d.id })), { cached: snap.metadata.fromCache });
     }, error);
   }
+  watchPlayers(roundId, cb, error) {
+    return onSnapshot(collection(this.db, paths.rounds, roundId, 'players'), { includeMetadataChanges: true }, snap => {
+      const players=snap.docs.map(d => ({ ...d.data(), id: d.id }));
+      players.sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0));
+      cb(players,{cached:snap.metadata.fromCache});
+    }, error);
+  }
+  async finalPlayers(roundId) {
+    const snap=await getDocsFromServer(collection(this.db,paths.rounds,roundId,'players'));
+    const players=snap.docs.map(d=>({...d.data(),id:d.id}));
+    return players.sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0));
+  }
   async finalTop(roundId) {
     const snap = await getDocsFromServer(this.topQuery(roundId));
     return snap.docs.map(d => ({ ...d.data(), id: d.id }));

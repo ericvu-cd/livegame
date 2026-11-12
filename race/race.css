@@ -38,12 +38,28 @@
 #admin-status[data-state="ended"]{color:#ffb49d}
 .manager-layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
 .manager-controls{padding:24px}
+.admin-results{max-width:1200px;margin:24px auto 42px;padding:0 22px;background:linear-gradient(145deg,#153f75,#0e2d58)}
+.admin-results-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 2px;border-bottom:2px solid #7191b64d}
+.admin-results-heading .eyebrow{margin-bottom:5px}
+.admin-results-heading h2{color:#fff3be}
+.admin-results-heading h2 small{font:.64rem var(--pixel);color:#ffdc4c;margin-left:8px}
+.admin-results-heading>strong{color:#9ce9a5;font-size:.82rem;text-align:right}
+.admin-results-table-wrap{overflow-x:auto}
+.admin-results-table{color:#fff8e6;min-width:600px}
+.admin-results-table thead{background:#0c2b53;color:#bddcff}
+.admin-results-table th,.admin-results-table td{padding:10px 14px;border-bottom:1px solid #89a8ca35}
+.admin-results-table th:first-child{width:82px}
+.admin-results-table th:last-child{width:140px}
+.admin-results-table tbody tr:nth-child(even){background:#ffffff0d}
+.admin-results-table .admin-result-name{font-weight:900}
+.admin-results-table .admin-result-score{font-weight:900;color:#ffe58c}
 .manager-controls .host-heading h2{font-size:1.2rem}
 .manager-controls .duration-input input{width:100px;padding:15px 5px;font-size:1.5rem}
 .manager-controls label{font-size:.9rem}
 .manager-controls .small{font-size:.76rem}
 .manager-buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
 .manager-buttons #start-btn{grid-column:1/-1}
+.manager-buttons #query-btn{grid-column:1/-1}
 .manager-buttons button{margin:0!important;padding:16px 10px!important;font-size:.92rem;min-height:56px}
 .danger-button{background:linear-gradient(#ff9a70 0 12%,#e44b3a 12% 85%,#a92c2c 85%);color:#fff6de;border-color:#421e2d;box-shadow:inset 2px 2px #ffc298,0 4px #14203c;text-shadow:1px 1px #883427}
 .manager-help{background:#0a254b;padding:12px 14px;border-left:3px solid #ffd354;margin:20px 0 15px;color:#c0daf2}
@@ -53,7 +69,7 @@
 .manager-guide ol{margin:12px 0 0;padding-left:21px;color:#c6def4;font-size:.74rem;line-height:2}
 .manager-links #demo-label{font-size:.65rem}
 @media(min-width:1100px) and (max-height:900px){.display-only .rank-name{font-size:1rem}.display-only .rank-state{width:150px}.display-only .player-phase{font-size:.56rem;padding:3px 7px}}
-@media(max-width:700px){.manager-layout{grid-template-columns:1fr}.manager-shell{padding:20px 14px 40px}.manager-intro>img{width:140px}.manager-summary{gap:8px}.manager-summary>div{padding:12px 10px}.manager-summary span{font-size:.59rem}.manager-summary strong{font-size:.88rem}#admin-clock{font-size:1.2rem}#admin-round{font-size:1rem}.manager-controls,.manager-links{padding:20px}.display-only .rank-state{width:120px}.display-only .player-phase{font-size:.52rem;padding:3px 4px}}
+@media(max-width:700px){.manager-layout{grid-template-columns:1fr}.manager-shell{padding:20px 14px 40px}.manager-intro>img{width:140px}.manager-summary{gap:8px}.manager-summary>div{padding:12px 10px}.manager-summary span{font-size:.59rem}.manager-summary strong{font-size:.88rem}#admin-clock{font-size:1.2rem}#admin-round{font-size:1rem}.manager-controls,.manager-links{padding:20px}.admin-results{margin:18px 14px 38px;padding:0 14px}.admin-results-heading{align-items:flex-start}.admin-results-heading>strong{font-size:.7rem}.admin-results-table{min-width:520px}.admin-results-table th,.admin-results-table td{padding:9px}.display-only .rank-state{width:120px}.display-only .player-phase{font-size:.52rem;padding:3px 4px}}
 @media(max-width:520px){.display-only .rank-state{display:none}.display-only .rank-name{font-size:.84rem}.manager-intro{gap:10px}.manager-intro>img{display:none}.manager-intro p{font-size:.73rem}.manager-summary{grid-template-columns:1fr 1fr}.manager-summary>div:last-child{grid-column:1/-1;padding-top:10px;padding-bottom:10px;display:flex;align-items:center;justify-content:space-between}.manager-summary>div:last-child span{margin:0}.manager-buttons button{font-size:.82rem}.manager-controls .duration-input input{width:90px;font-size:1.25rem}}
 
 .rank-score{line-height:1.1}.rank-number{line-height:1.15}.rank-name{line-height:1.3}
