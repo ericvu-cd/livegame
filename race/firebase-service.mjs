@@ -56,8 +56,10 @@ export class FirebaseService {
     return query(collection(this.db, paths.rounds, roundId, 'players'), orderBy('bestScore', 'desc'), limit(10));
   }
   watchTop(roundId, cb, error) {
-    return onSnapshot(this.topQuery(roundId), { includeMetadataChanges: true }, snap => {
-      cb(snap.docs.map(d => ({ ...d.data(), id: d.id })), { cached: snap.metadata.fromCache });
+    return onSnapshot(collection(this.db, paths.rounds, roundId, 'players'), { includeMetadataChanges: true }, snap => {
+      const players=snap.docs.map(d => ({ ...d.data(), id: d.id }));
+      players.sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0));
+      cb(players.slice(0,10), { cached: snap.metadata.fromCache, total: players.length });
     }, error);
   }
   watchPlayers(roundId, cb, error) {

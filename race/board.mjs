@@ -3,10 +3,9 @@ import { isRunning, formatClock } from './model.mjs';
 import { ArcadeAudio, announce, confetti } from './effects.mjs';
 import { pageURL } from './navigation.mjs';
 import { RankingView } from './board-ranking.mjs';
-const $=id=>document.getElementById(id),audio=new ArcadeAudio($('sound-btn'));
-audio.music.pause();audio.music.muted=true;
+const $=id=>document.getElementById(id),audio=new ArcadeAudio($('sound-btn'),{music:false});
 const ranking=new RankingView(audio);
-let leaderId=null,lastWarningSecond=null;
+let leaderId=null,lastWarningSecond=null,participantCount=0;
 let service,race=null,unwatchTop=()=>{},frozen=false,finalLoading=false,finalComplete=false,lastFinalTry=-Infinity,celebrationStarted=false;
 $('play-link').href=pageURL('fishball-race.html').href;
 function notice(message='',error=false){$('notice').textContent=message;$('notice').classList.toggle('error',error);}
@@ -20,6 +19,7 @@ function tick(){
   const running=isRunning(race,service.now()),hasRound=!!race?.roundId;
   const remaining=hasRound?Math.max(0,race.endsAt-service.now()):0;
   $('clock').textContent=hasRound?formatClock(remaining):'--:--';
+  $('participant-count').textContent='本場連線 '+participantCount+' 人';
   $('timer-fill').style.transform='scaleX('+(hasRound?Math.min(1,remaining/(race.duration*1000)):1)+')';
   document.body.classList.toggle('state-running',running);document.body.classList.toggle('state-ready',!hasRound);document.body.classList.toggle('state-finished',hasRound&&!running);
   $('live-badge').textContent=running?'● LIVE · 即時爭霸':hasRound?'本場成績已截止':'挑戰者募集中';
@@ -42,8 +42,9 @@ async function finalize(roundId){
       if(!overlay){overlay=document.createElement('div');overlay.id='finalizing-overlay';overlay.style.cssText='position:fixed;inset:0;z-index:29000;display:grid;place-items:center;background:#eaf8fff5;padding:20px;text-align:center';overlay.innerHTML='<div style="padding:28px 36px;border:3px solid #8fc8e5;border-radius:16px;background:#fff;box-shadow:0 12px 40px #547e9a33"><strong style="display:block;color:#245675;font-size:clamp(32px,6vw,56px)">結算中</strong><span style="display:block;margin-top:8px;color:#527795">正在彙整最後成績，請稍候</span></div>';document.body.append(overlay);}
       await new Promise(resolve=>setTimeout(resolve,Math.min(wait,15000)));
     }
-    const players=await service.finalTop(roundId);
+    const allPlayers=await service.finalPlayers(roundId),players=allPlayers.slice(0,10);
     if(race?.roundId===roundId){
+      participantCount=allPlayers.length;
       render(players);finalComplete=true;notice(race.status==='stopped'?'主持人已停止本場，最終排名已鎖定。':'競賽結束，最終排名已鎖定。');
       document.getElementById('finalizing-overlay')?.remove();
       connection(true,demo?'本機示範':'最終排名已確認');
@@ -74,7 +75,7 @@ try{
   service.watchRace((next,meta={})=>{
     const changed=race?.roundId!==next?.roundId;race=next;
     if(changed){
-      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;celebrationStarted=false;ranking.reset();leaderId=null;lastWarningSecond=null;render([]);notice();$('final-celebration').hidden=true;
+      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;celebrationStarted=false;ranking.reset();leaderId=null;participantCount=0;lastWarningSecond=null;render([]);notice();$('final-celebration').hidden=true;
       $('hype-banner').classList.remove('hype-show');$('celebration').replaceChildren();
       if(next?.roundId&&isRunning(next,service.now())){
         if(service.now()-next.startedAt<3000){announce('GO！全場開戰','吃好魚、衝高分，挑戰魚丸王！');audio.cue('go');}
@@ -82,7 +83,7 @@ try{
         unwatchTop=service.watchTop(roundId,(players,metadata={})=>{
           if(frozen||race?.roundId!==roundId)return;
           if(!isRunning(race,service.now())){void finalize(roundId);return;}
-          render(players);connection(!metadata.cached,metadata.cached?'等待伺服器成績':demo?'本機示範':'即時排名連線中');
+          participantCount=metadata.total??players.length;render(players);connection(!metadata.cached,metadata.cached?'等待伺服器成績':demo?'本機示範':'即時排名連線中');
         },error=>{notice(friendlyError(error),true);connection(false,'排名連線失敗');});
       }
     }

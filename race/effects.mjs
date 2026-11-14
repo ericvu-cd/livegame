@@ -20,15 +20,15 @@ export function confetti(){
   setTimeout(()=>root.replaceChildren(),3200);
 }
 export class ArcadeAudio{
-  constructor(button){
-    this.button=button;this.context=null;this.muted=localStorage.getItem('fishball-race-sound')==='off';
+  constructor(button,{music=true}={}){
+    this.button=button;this.context=null;this.musicEnabled=music;this.muted=localStorage.getItem('fishball-race-sound')==='off';
     this.music=new Audio(new URL('./assets/fbbgm.m4a',import.meta.url));this.music.loop=true;this.music.volume=.18;
     this.music.preload='none';this.update();
     button?.addEventListener('click',()=>{this.muted=!this.muted;localStorage.setItem('fishball-race-sound',this.muted?'off':'on');this.update();if(!this.muted)this.unlock();});
-    document.addEventListener('visibilitychange',()=>{if(document.hidden)this.music.pause();else if(this.context&&!this.muted)this.music.play().catch(()=>{});});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden||!this.musicEnabled)this.music.pause();else if(this.context&&!this.muted)this.music.play().catch(()=>{});});
   }
-  update(){if(this.button){this.button.textContent=this.muted?'🔇 聲音關':'🔊 聲音開';this.button.setAttribute('aria-pressed',String(!this.muted));}this.music.muted=this.muted;if(this.muted)this.music.pause();}
-  unlock(){if(this.muted)return;try{this.context||=new (window.AudioContext||window.webkitAudioContext)();void this.context.resume();this.music.play().catch(()=>{});}catch{}}
+  update(){if(this.button){this.button.textContent=this.muted?'🔇 聲音關':'🔊 聲音開';this.button.setAttribute('aria-pressed',String(!this.muted));}this.music.muted=this.muted||!this.musicEnabled;if(this.muted||!this.musicEnabled)this.music.pause();}
+  unlock(){if(this.muted)return;try{this.context||=new (window.AudioContext||window.webkitAudioContext)();void this.context.resume();if(this.musicEnabled)this.music.play().catch(()=>{});}catch{}}
   tone(freq,duration=.1,delay=0,type='square',volume=.035){
     if(this.muted||!this.context||this.context.state!=='running')return;
     const start=this.context.currentTime+delay,osc=this.context.createOscillator(),gain=this.context.createGain();

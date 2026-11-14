@@ -37,7 +37,7 @@ export class DemoService {
   }
   notify() { for (const cb of this.listeners) cb(); }
   watchRace(cb) { const fn = () => cb(this.state().control); this.listeners.add(fn); fn(); return () => this.listeners.delete(fn); }
-  watchTop(roundId, cb) { const fn = () => cb(topTen(Object.values(this.state().players[roundId] || {}))); this.listeners.add(fn); fn(); return () => this.listeners.delete(fn); }
+  watchTop(roundId, cb) { const fn = () => { const all=Object.values(this.state().players[roundId]||{}).sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0)); cb(all.slice(0,10),{total:all.length}); }; this.listeners.add(fn); fn(); return () => this.listeners.delete(fn); }
   watchPlayers(roundId, cb) { const fn = () => cb(Object.values(this.state().players[roundId] || {}).sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0))); this.listeners.add(fn); fn(); return () => this.listeners.delete(fn); }
   async finalPlayers(roundId) { return Object.values(this.state().players[roundId] || {}).sort((a,b)=>b.bestScore-a.bestScore||(a.id<b.id?-1:a.id>b.id?1:0)); }
   async finalTop(roundId) { return topTen(Object.values(this.state().players[roundId] || {})); }
