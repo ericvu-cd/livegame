@@ -57,9 +57,9 @@ async function finalize(roundId){
 async function celebrateFinal(players,roundId){
  if(celebrationStarted||!players.length)return;celebrationStarted=true;
  const winner=players[0];$('final-winner').textContent=winner.name;$('final-winner-score').textContent=winner.bestScore.toLocaleString('zh-TW')+' 分';
- const overlay=$('final-celebration');overlay.hidden=false;
- for(let n=10;n>0;n--){if(race?.roundId!==roundId){overlay.hidden=true;return;}$('final-celebration-count').textContent=n;await new Promise(resolve=>setTimeout(resolve,1000));}
- if(race?.roundId===roundId)overlay.hidden=true;
+ const overlay=$('final-celebration');overlay.classList.remove('is-ending');overlay.hidden=false;
+ for(let n=5;n>0;n--){if(race?.roundId!==roundId){overlay.hidden=true;return;}$('final-celebration-count').textContent=n;await new Promise(resolve=>setTimeout(resolve,1000));if(n===1)overlay.classList.add('is-ending');}
+ if(race?.roundId===roundId){overlay.hidden=true;overlay.classList.remove('is-ending');}
 }
 $('fullscreen-btn').addEventListener('click',async()=>{
   audio.unlock();
@@ -75,7 +75,7 @@ try{
   service.watchRace((next,meta={})=>{
     const changed=race?.roundId!==next?.roundId;race=next;
     if(changed){
-      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;celebrationStarted=false;ranking.reset();leaderId=null;participantCount=0;lastWarningSecond=null;render([]);notice();$('final-celebration').hidden=true;
+      unwatchTop();unwatchTop=()=>{};frozen=false;finalComplete=false;celebrationStarted=false;ranking.reset();leaderId=null;participantCount=0;lastWarningSecond=null;render([]);notice();$('final-celebration').hidden=true;$('final-celebration').classList.remove('is-ending');
       $('hype-banner').classList.remove('hype-show');$('celebration').replaceChildren();
       if(next?.roundId&&isRunning(next,service.now())){
         if(service.now()-next.startedAt<3000){announce('GO！全場開戰','吃好魚、衝高分，挑戰魚丸王！');audio.cue('go');}
